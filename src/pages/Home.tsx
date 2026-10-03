@@ -69,14 +69,14 @@ export default function Home() {
           <div className="hero__copy">
             <p className="hero__badge" data-reveal>
               <span className="hero__badge-dot" aria-hidden />
-              Digital-студия
+              Студия для бизнеса
             </p>
             <h1 id="hero-title" className="hero__title" data-reveal style={delay(1)}>
-              Делаем из digital <span className="hero__accent">актив</span>
+              Чтобы вас находили. И <span className="hero__accent">выбирали.</span>
             </h1>
             <p className="hero__lead" data-reveal style={delay(2)}>
-              Соцсети, сайты, дизайн и автоматизация — в одной студии. Без шума и лишних слов, зато с результатом,
-              который можно посчитать.
+              Ведём соцсети, делаем сайты и дизайн, настраиваем автоматизацию. Всё в одной студии, понятно и без лишних
+              слов.
             </p>
             <div className="hero__actions" data-reveal style={delay(3)}>
               <Link to="/contact" className="btn btn--accent btn--lg" viewTransition>
@@ -88,8 +88,8 @@ export default function Home() {
               </Link>
             </div>
             <p className="hero__note" data-reveal style={delay(4)}>
-              <b>Это не картинка.</b> Справа — настоящие дизайн-токены этого сайта. Код пишется на ваших глазах и
-              перекрашивает всю страницу. Кликните в окно и поправьте сами.
+              <b>Это не картинка.</b> Справа — настоящие настройки оформления этого сайта. Код печатается сам и
+              перекрашивает всю страницу. Нажмите на него и поправьте сами.
             </p>
           </div>
 
@@ -99,7 +99,7 @@ export default function Home() {
               variants={variants}
               fileName="tokens.css"
               highlight={highlightCss}
-              label="Редактор дизайн-токенов сайта"
+              label="Редактор настроек оформления сайта"
               tokens
               mode={{ value: style.mode, onChange: (m) => themeStore.setMode(m) }}
             />
@@ -112,10 +112,10 @@ export default function Home() {
         <div className="container">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Услуги</p>
-            <h2 id="services-title">Четыре направления. Одна система.</h2>
+            <h2 id="services-title">Четыре направления. Одна команда.</h2>
             <p>
-              Каждое сильно само по себе — а вместе дают то, чего не добиться по отдельности: целостный бренд,
-              который находят, запоминают и выбирают.
+              Каждое хорошо работает само по себе, а вместе они дают больше: вас легче найти, проще запомнить и
+              приятнее выбрать.
             </p>
           </div>
           <div className="services">
@@ -130,8 +130,8 @@ export default function Home() {
         <div className="container">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Связки</p>
-            <h2 id="bundles-title">Вместе — сильнее</h2>
-            <p>Типовые комбинации под частые задачи. Собираем под вас: берите ровно то, что нужно.</p>
+            <h2 id="bundles-title">Вместе — удобнее</h2>
+            <p>Частые сочетания под типичные задачи. Мы соберём под вас: берите только то, что нужно.</p>
           </div>
           <div className="bundles">
             {bundles.map((b, i) => (
@@ -158,7 +158,7 @@ export default function Home() {
         <div className="container">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Подход</p>
-            <h2 id="why-title">Просто. Прозрачно. По делу.</h2>
+            <h2 id="why-title">Просто. Понятно. По делу.</h2>
           </div>
           <div className="principles">
             {principles.map((p, i) => (

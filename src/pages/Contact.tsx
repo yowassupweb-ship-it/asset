@@ -11,7 +11,7 @@ import { usePageMeta } from '../hooks/usePageMeta'
  * (см. README, «Форма заявок»).
  */
 export default function Contact() {
-  usePageMeta('Контакты', 'Обсудить проект со студией Ассет: расскажите о задаче — вернёмся с идеями и планом.')
+  usePageMeta('Контакты', 'Обсудить проект со студией Ассет: расскажите о задаче — ответим с идеями и планом.')
   const [selected, setSelected] = useState<ServiceId[]>([])
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
@@ -43,8 +43,8 @@ export default function Contact() {
     <>
       <PageHero
         eyebrow="Контакты"
-        title="Давайте включим ваш проект"
-        lead="Расскажите о задаче в паре строк. Мы вернёмся с вопросами, идеями и понятным планом — без обязательств и без занудства."
+        title="Расскажите, что нужно"
+        lead="Напишите пару строк о своей задаче. Мы ответим с вопросами, идеями и понятным планом — без обязательств."
       />
 
       <section className="section section--flush">

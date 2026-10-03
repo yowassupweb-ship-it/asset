@@ -88,7 +88,7 @@ export default function ServicePage() {
         <div className="container">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Что внутри</p>
-            <h2 id="inside-title">Из чего складывается результат</h2>
+            <h2 id="inside-title">Что входит в работу</h2>
           </div>
           <div className="deliverables">
             {p.deliverables.map((d, i) => (
@@ -106,7 +106,7 @@ export default function ServicePage() {
         <div className="container">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Как это проходит</p>
-            <h2 id="steps-title">Четыре шага без сюрпризов</h2>
+            <h2 id="steps-title">Четыре шага, без сюрпризов</h2>
           </div>
           <ol className="steps">
             {p.steps.map((st, i) => (
@@ -132,8 +132,8 @@ export default function ServicePage() {
         <div className="container">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Сопутствующие услуги</p>
-            <h2 id="related-title">Что ещё часто берут вместе с этим</h2>
-            <p>Это не навязанный допсервис, а продолжение задачи. Подключаем по одному — в тот момент, когда они действительно нужны.</p>
+            <h2 id="related-title">Что ещё часто берут вместе</h2>
+            <p>Это не навязанные допродажи, а продолжение задачи. Подключаем по одному, когда они действительно нужны.</p>
           </div>
           <RelatedServices items={x.related} />
         </div>
@@ -143,7 +143,7 @@ export default function ServicePage() {
         <div className="container container--narrow">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Вопросы</p>
-            <h2 id="sfaq-title">Что обычно спрашивают</h2>
+            <h2 id="sfaq-title">О чём обычно спрашивают</h2>
           </div>
           <div className="faq" data-reveal>
             {x.faq.map((item) => (

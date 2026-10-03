@@ -6,13 +6,13 @@ import { usePageMeta } from '../hooks/usePageMeta'
 
 export default function Services() {
   const [tab, setTab] = useState(services[0]!.id)
-  usePageMeta('Услуги', 'Соцсети, сайты, дизайн и автоматизация бизнес-процессов — студия Ассет.')
+  usePageMeta('Услуги', 'Соцсети, сайты, дизайн и автоматизация бизнеса — студия Ассет.')
   return (
     <>
       <PageHero
         eyebrow="Услуги"
-        title="Всё, чтобы ваш бренд работал на вас"
-        lead="Соцсети дают голос, дизайн — лицо, сайт — дом, автоматизация — скорость. Берите любое направление отдельно или собирайте систему целиком."
+        title="Всё, чтобы о вас узнали и выбрали"
+        lead="Соцсети помогают рассказать о себе, дизайн — выглядеть достойно, сайт — принимать заявки, автоматизация — не терять время. Берите что-то одно или всё сразу."
       />
       <section className="section section--flush">
         <div className="container">
@@ -27,8 +27,8 @@ export default function Services() {
         <div className="container">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Сопутствующие услуги</p>
-            <h2 id="rel-title">Всё, что вырастает вокруг основной задачи</h2>
-            <p>Выберите направление — покажем, что чаще всего подключают рядом и что входит в каждую услугу.</p>
+            <h2 id="rel-title">Что ещё часто нужно рядом</h2>
+            <p>Выберите направление — покажем, что обычно подключают дополнительно и что в это входит.</p>
           </div>
           <div className="chips tabs" role="group" aria-label="Направление">
             {services.map((sv) => (

@@ -50,7 +50,7 @@ export function ServiceCard({ s, i = 0 }: { s: Service; i?: number }) {
   )
 }
 
-export function CtaBand({ title = 'Давайте включим ваш проект', text = 'Расскажите о задаче в паре строк — вернёмся с идеями и понятным планом.' }: { title?: string; text?: string }) {
+export function CtaBand({ title = 'Обсудим ваш проект?', text = 'Пара строк о задаче — и мы вернёмся с идеями и понятным планом.' }: { title?: string; text?: string }) {
   return (
     <section className="section section--tight">
       <div className="container">
@@ -75,7 +75,7 @@ export function OtherServices({ current }: { current: string }) {
       <div className="container">
         <div className="section-head" data-reveal>
           <p className="eyebrow">Ещё</p>
-          <h2>Работает лучше вместе</h2>
+          <h2>Лучше работает вместе</h2>
         </div>
         <div className="services services--3">
           {rest.map((s, i) => (

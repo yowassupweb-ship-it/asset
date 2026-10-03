@@ -9,7 +9,7 @@ export function Footer() {
       <div className="container footer__grid">
         <div className="footer__brand">
           <Logo />
-          <p>Студия, которая превращает digital в актив: соцсети, дизайн, сайты и автоматизация.</p>
+          <p>Студия соцсетей, сайтов, дизайна и автоматизации. Делаем понятно и по делу.</p>
         </div>
         <nav aria-label="Услуги">
           <h2 className="footer__h">Услуги</h2>

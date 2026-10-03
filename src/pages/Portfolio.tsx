@@ -15,13 +15,13 @@ interface Case {
 const cases: Case[] = []
 
 export default function Portfolio() {
-  usePageMeta('Портфолио', 'Кейсы студии Ассет: соцсети, сайты, дизайн и автоматизация.')
+  usePageMeta('Портфолио', 'Работы студии Ассет: соцсети, сайты, дизайн и автоматизация.')
   return (
     <>
       <PageHero
         eyebrow="Портфолио"
         title="Лучшие работы — скоро здесь"
-        lead="Собираем кейсы, которыми не стыдно гордиться: с задачей, решением и честными цифрами. Пока готовим витрину — расскажем о проектах лично."
+        lead="Собираем работы, которыми можно гордиться: с задачей, решением и честными цифрами. Пока готовим витрину — расскажем о проектах лично."
       />
 
       <section className="section section--flush">
@@ -40,14 +40,14 @@ export default function Portfolio() {
             </ul>
           ) : (
             <div className="folder" data-reveal>
-              <div className="window window--flat" role="img" aria-label="Пустая папка «Кейсы» — скоро здесь появятся проекты">
+              <div className="window window--flat" role="img" aria-label="Пустая папка «Работы» — скоро здесь появятся проекты">
                 <div className="window__bar">
                   <span className="window__lights" aria-hidden>
                     <i data-c="close" />
                     <i data-c="min" />
                     <i data-c="max" />
                   </span>
-                  <span className="window__title">Кейсы</span>
+                  <span className="window__title">Работы</span>
                 </div>
                 <div className="folder__grid" aria-hidden>
                   {[0, 1, 2, 3, 4, 5].map((n) => (
