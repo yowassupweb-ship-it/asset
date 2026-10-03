@@ -64,7 +64,7 @@ export default function Contact() {
           </form>
 
           <aside className="contact-side" data-reveal style={{ '--i': 1 } as React.CSSProperties}>
-            <div className="card contact-card" data-spotlight>
+            <div className="card contact-card">
               <h2>Напрямую</h2>
               <a href={`mailto:${site.contacts.email}`}>{site.contacts.email}</a>
               <a href={site.contacts.telegram} target="_blank" rel="noopener noreferrer">

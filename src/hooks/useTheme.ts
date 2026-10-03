@@ -25,6 +25,7 @@ export function useTheme() {
       /* приватный режим — не критично */
     }
     setTheme(next)
+    window.dispatchEvent(new Event('asset:theme'))
   }, [theme])
 
   return { theme, toggle }

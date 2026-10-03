@@ -45,7 +45,7 @@ export function CodeWindow({ live, variants, fileName, highlight, label }: Props
   const cols = Math.max(...variants.flatMap((v) => v.code.split('\n').map((l) => l.length)), ...lines.map((l) => l.length))
 
   return (
-    <div className="code-window" data-spotlight ref={root}>
+    <div className="code-window" ref={root}>
       <div className="window__bar">
         <span className="window__lights" aria-hidden>
           <i data-c="close" />

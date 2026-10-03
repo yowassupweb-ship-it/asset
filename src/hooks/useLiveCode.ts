@@ -7,6 +7,8 @@ interface Options {
   /** Автозапуск печати. По умолчанию — если пользователь не просил уменьшить движение. */
   autoplay?: boolean
   startDelay?: number
+  /** Сколько первых вариантов проходит автопоказ (остальные — только по клику). */
+  autoCount?: number
 }
 
 const TYPE_MS = 42
@@ -20,17 +22,18 @@ export const prefersReducedMotion = () =>
  * «Живой» код: печатает варианты по кругу, стирает, печатает следующий.
  * Пользователь может поставить на паузу и править текст руками.
  */
-export function useLiveCode(variants: Variant[], { autoplay, startDelay = 1800 }: Options = {}) {
+export function useLiveCode(variants: Variant[], { autoplay, startDelay = 4000, autoCount }: Options = {}) {
   const reduce = prefersReducedMotion()
   const shouldPlay = autoplay ?? !reduce
   const [index, setIndex] = useState(0)
-  const [text, setText] = useState(() => (shouldPlay ? '' : (variants[0]?.code ?? '')))
-  const [phase, setPhase] = useState<Phase>('typing')
+  // окно никогда не пустое: стартуем с первого варианта, дальше он стирается и идёт следующий
+  const [text, setText] = useState(() => variants[0]?.code ?? '')
+  const [phase, setPhase] = useState<Phase>(shouldPlay ? 'hold' : 'typing')
   const [playing, setPlaying] = useState(shouldPlay)
   // вне поля зрения / вкладка скрыта — печать приостановлена, но режим не меняется
   const [suspended, setSuspended] = useState(false)
   // последний полностью написанный вариант: именно он применяется к странице
-  const [settled, setSettled] = useState('')
+  const [settled, setSettled] = useState(() => variants[0]?.code ?? '')
   const first = useRef(true)
 
   useEffect(() => {
@@ -45,21 +48,22 @@ export function useLiveCode(variants: Variant[], { autoplay, startDelay = 1800 }
           setPhase('hold')
         }, 0)
       } else {
-        const delay = first.current ? startDelay : TYPE_MS
         timer = window.setTimeout(() => {
-          first.current = false
           // небольшие «рывки» делают печать живой; отступы и пробелы идут пачкой
           let n = 1 + Math.floor(Math.random() * 2)
           while (target[text.length + n - 1] === ' ' && text.length + n < target.length) n++
           setText(target.slice(0, text.length + n))
-        }, delay)
+        }, TYPE_MS)
       }
     } else if (phase === 'hold') {
-      timer = window.setTimeout(() => setPhase('erase'), HOLD_MS)
+      timer = window.setTimeout(() => {
+        first.current = false
+        setPhase('erase')
+      }, first.current ? startDelay : HOLD_MS)
     } else {
       if (text.length === 0) {
         timer = window.setTimeout(() => {
-          if (index + 1 >= variants.length) {
+          if (index + 1 >= (autoCount ?? variants.length)) {
             // один круг показан — возвращаемся к первому варианту и останавливаемся
             setIndex(0)
             setText(variants[0]?.code ?? '')
@@ -79,7 +83,7 @@ export function useLiveCode(variants: Variant[], { autoplay, startDelay = 1800 }
       }
     }
     return () => window.clearTimeout(timer)
-  }, [playing, suspended, phase, text, index, variants, startDelay])
+  }, [playing, suspended, phase, text, index, variants, startDelay, autoCount])
 
   /** Выбор варианта: перепечатываем с нуля (или сразу показываем при reduced motion). */
   const select = useCallback(
@@ -98,6 +102,15 @@ export function useLiveCode(variants: Variant[], { autoplay, startDelay = 1800 }
     },
     [variants, reduce],
   )
+
+  /** Сброс к первому варианту без печати (например, при смене темы). */
+  const reset = useCallback(() => {
+    setIndex(0)
+    setText(variants[0]?.code ?? '')
+    setSettled(variants[0]?.code ?? '')
+    setPhase('typing')
+    setPlaying(false)
+  }, [variants])
 
   const pause = useCallback(() => setPlaying(false), [])
   const toggle = useCallback(() => {
@@ -122,7 +135,7 @@ export function useLiveCode(variants: Variant[], { autoplay, startDelay = 1800 }
   /** Для страницы целиком: меняется только когда вариант дописан. */
   const applied = playing ? settled : text
 
-  return { index, text, onEdit, playing, pause, toggle, select, phase, preview, applied, setSuspended }
+  return { index, text, onEdit, playing, pause, toggle, select, reset, phase, preview, applied, setSuspended }
 }
 
 export type LiveCode = ReturnType<typeof useLiveCode>

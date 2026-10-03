@@ -30,7 +30,7 @@ export function AppIcon({ name }: { name: Service['icon'] }) {
 
 export function ServiceCard({ s, i = 0 }: { s: Service; i?: number }) {
   return (
-    <Link to={servicePath(s)} className="card service" data-reveal data-spotlight style={delay(i)} viewTransition>
+    <Link to={servicePath(s)} className="card service" data-reveal style={delay(i)} viewTransition>
       <AppIcon name={s.icon} />
       <h3 className="service__title">{s.title}</h3>
       <p className="service__hook">{s.hook}</p>
@@ -54,7 +54,7 @@ export function CtaBand({ title = 'Давайте включим ваш прое
   return (
     <section className="section section--tight">
       <div className="container">
-        <div className="cta" data-reveal data-spotlight>
+        <div className="cta" data-reveal>
           <div>
             <h2>{title}</h2>
             <p>{text}</p>

@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { useReveal } from '../hooks/useReveal'
-import { useSpotlight } from '../hooks/useSpotlight'
 import { Footer } from './Footer'
 import { Menubar } from './Menubar'
 
@@ -27,7 +26,6 @@ function ScrollProgress() {
 export default function Layout() {
   const { pathname } = useLocation()
   useReveal()
-  useSpotlight()
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })

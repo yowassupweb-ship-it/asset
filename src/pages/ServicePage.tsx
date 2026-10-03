@@ -18,15 +18,17 @@ export default function ServicePage() {
     <>
       <header className="page-hero">
         <div className="page-hero__glow" aria-hidden />
-        <div className="container page-hero__inner">
+        <div className="container page-hero__inner page-hero__inner--art">
+          <div className="page-hero__art" aria-hidden data-reveal style={delay(2)}>
+            <i />
+            <i />
+            <AppIcon name={s.icon} />
+          </div>
           <nav className="crumbs" aria-label="Хлебные крошки" data-reveal>
             <Link to="/services" viewTransition>Услуги</Link>
             <span aria-hidden>/</span>
             <span aria-current="page">{s.short}</span>
           </nav>
-          <div data-reveal style={delay(1)}>
-            <AppIcon name={s.icon} />
-          </div>
           <h1 data-reveal style={delay(2)}>{p.headline}</h1>
           <p className="page-hero__lead" data-reveal style={delay(3)}>{p.lead}</p>
           <div className="hero__actions" data-reveal style={delay(4)}>
@@ -39,9 +41,12 @@ export default function ServicePage() {
 
       <section className="section section--flush">
         <div className="container manifesto">
-          {p.manifesto.map((t, i) => (
-            <p key={i} data-reveal style={delay(i)}>{t}</p>
-          ))}
+          <p className="eyebrow" data-reveal>Идея</p>
+          <div className="manifesto__text">
+            {p.manifesto.map((t, i) => (
+              <p key={i} data-reveal style={delay(i + 1)}>{t}</p>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -66,7 +71,7 @@ export default function ServicePage() {
           </div>
           <div className="deliverables">
             {p.deliverables.map((d, i) => (
-              <div key={d.title} className="card deliverable" data-reveal data-spotlight style={delay(i % 3)}>
+              <div key={d.title} className="card deliverable" data-reveal style={delay(i % 3)}>
                 <span className="deliverable__n" aria-hidden>{String(i + 1).padStart(2, '0')}</span>
                 <h3>{d.title}</h3>
                 <p>{d.text}</p>

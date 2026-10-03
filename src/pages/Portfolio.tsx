@@ -30,7 +30,7 @@ export default function Portfolio() {
             <ul className="cases">
               {cases.map((c) => (
                 <li key={c.title}>
-                  <a href={c.href} className="card case" data-spotlight>
+                  <a href={c.href} className="card case">
                     <img src={c.image} alt="" loading="lazy" />
                     <span className="case__cat">{c.category}</span>
                     <span className="case__title">{c.title}</span>

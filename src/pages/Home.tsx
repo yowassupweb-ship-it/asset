@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router'
 import { GlobalTheme } from '../components/live/GlobalTheme'
 import { CodeWindow } from '../components/live/CodeWindow'
@@ -13,7 +14,14 @@ import { highlightCss } from '../lib/highlight'
 
 export default function Home() {
   usePageMeta()
-  const live = useLiveCode(themeVariants)
+  const live = useLiveCode(themeVariants, { autoCount: 5 })
+  const { reset } = live
+
+  // пользователь сам переключил тему — показ останавливаем, цвета возвращаем системным
+  useEffect(() => {
+    window.addEventListener('asset:theme', reset)
+    return () => window.removeEventListener('asset:theme', reset)
+  }, [reset])
 
   return (
     <>

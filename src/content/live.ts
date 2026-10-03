@@ -15,11 +15,7 @@ export const themeVariants: Variant[] = [
     id: 'volt',
     label: 'Volt',
     code: `:root {
-  color-scheme: light;
-  --bg: #f5f5f7;
-  --bg-elevated: #ffffff;
-  --bg-sunken: #ececf0;
-  --text: #0c0c0f;
+  /* цвета — по системной теме */
   --accent: #ffd60a;
   --on-accent: #0c0c0f;
   --link: #5446e6;
@@ -83,6 +79,112 @@ export const themeVariants: Variant[] = [
   --accent: #c6ff1a;
   --on-accent: #000000;
   --link: #0000ee;
+  --shape: 0;
+  --radius-pill: 0;
+}`,
+  },
+  {
+    id: 'sakura',
+    label: 'Сакура',
+    code: `:root {
+  color-scheme: light;
+  --bg: #fff4f7;
+  --bg-elevated: #ffffff;
+  --bg-sunken: #ffe6ee;
+  --text: #2a0f1a;
+  --accent: #ff6fa5;
+  --on-accent: #2a0f1a;
+  --link: #c2185b;
+  --shape: 1.8;
+}`,
+  },
+  {
+    id: 'sunset',
+    label: 'Закат',
+    code: `:root {
+  color-scheme: light;
+  --bg: #fff3e6;
+  --bg-elevated: #fffaf3;
+  --bg-sunken: #ffe4cc;
+  --text: #2b1608;
+  --accent: #ff7a1a;
+  --on-accent: #2b1608;
+  --link: #c2410c;
+  --shape: 1.2;
+}`,
+  },
+  {
+    id: 'forest',
+    label: 'Лес',
+    code: `:root {
+  color-scheme: light;
+  --bg: #eef3ec;
+  --bg-elevated: #ffffff;
+  --bg-sunken: #dfe9db;
+  --text: #14231a;
+  --accent: #23804a;
+  --on-accent: #ffffff;
+  --link: #1d6b3f;
+  --shape: 0.8;
+}`,
+  },
+  {
+    id: 'ocean',
+    label: 'Океан',
+    code: `:root {
+  color-scheme: dark;
+  --bg: #06141f;
+  --bg-elevated: #0d2233;
+  --bg-sunken: #04101a;
+  --text: #e6f4ff;
+  --accent: #38bdf8;
+  --on-accent: #04101a;
+  --link: #7dd3fc;
+  --shape: 1.2;
+}`,
+  },
+  {
+    id: 'lavender',
+    label: 'Лаванда',
+    code: `:root {
+  color-scheme: light;
+  --bg: #f3f0ff;
+  --bg-elevated: #ffffff;
+  --bg-sunken: #e6e0ff;
+  --text: #1e1740;
+  --accent: #7c4dff;
+  --on-accent: #ffffff;
+  --link: #5b34d6;
+  --shape: 2;
+}`,
+  },
+  {
+    id: 'graphite',
+    label: 'Графит',
+    code: `:root {
+  color-scheme: dark;
+  --bg: #111113;
+  --bg-elevated: #1b1b1f;
+  --bg-sunken: #0b0b0d;
+  --text: #ececf0;
+  --accent: #ececf0;
+  --on-accent: #111113;
+  --link: #9aa0ff;
+  --shape: 0.6;
+}`,
+  },
+  {
+    id: 'terminal',
+    label: 'Терминал',
+    code: `:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --bg-elevated: #0a140a;
+  --bg-sunken: #000000;
+  --text: #c8ffc8;
+  --accent: #39ff14;
+  --on-accent: #000000;
+  --link: #39ff14;
   --shape: 0;
   --radius-pill: 0;
 }`,
