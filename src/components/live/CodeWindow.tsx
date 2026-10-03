@@ -2,6 +2,8 @@ import { useEffect, useId, useRef } from 'react'
 import type { Variant } from '../../content/live'
 import type { LiveCode } from '../../hooks/useLiveCode'
 import type { Highlighter } from '../../lib/highlight'
+import { validateTokens } from '../../lib/tokens'
+import { TokenControls } from './TokenControls'
 
 interface Props {
   live: LiveCode
@@ -10,13 +12,17 @@ interface Props {
   highlight: Highlighter
   /** Подпись для скринридеров */
   label: string
+  /** Переключатель светлый/тёмный режим (для консоли темы) */
+  mode?: { value: 'light' | 'dark'; onChange: (m: 'light' | 'dark') => void }
+  /** Быстрые контролы (цвета и скругление) и проверка токенов */
+  tokens?: boolean
 }
 
 /**
  * Окно редактора в стиле macOS/CodePen. Код печатается автоматически;
  * клик по тексту ставит печать на паузу и даёт править руками.
  */
-export function CodeWindow({ live, variants, fileName, highlight, label }: Props) {
+export function CodeWindow({ live, variants, fileName, highlight, label, mode, tokens }: Props) {
   const id = useId()
   const area = useRef<HTMLTextAreaElement>(null)
   const root = useRef<HTMLDivElement>(null)
@@ -42,6 +48,7 @@ export function CodeWindow({ live, variants, fileName, highlight, label }: Props
   const lines = live.text.split('\n')
   const rows = Math.max(...variants.map((v) => v.code.split('\n').length))
   const editing = !live.playing
+  const errors = tokens ? validateTokens(live.text) : []
   const cols = Math.max(...variants.flatMap((v) => v.code.split('\n').map((l) => l.length)), ...lines.map((l) => l.length))
 
   return (
@@ -82,10 +89,20 @@ export function CodeWindow({ live, variants, fileName, highlight, label }: Props
             aria-pressed={live.index === i}
             onClick={() => live.select(i)}
           >
+            {v.dot && <i className="code-tab__dot" style={{ background: v.dot }} aria-hidden />}
             {v.label}
           </button>
         ))}
       </div>
+      {mode && (
+        <div className="code-window__mode" role="group" aria-label="Режим темы">
+          {(['light', 'dark'] as const).map((m) => (
+            <button key={m} type="button" aria-pressed={mode.value === m} onClick={() => mode.onChange(m)}>
+              {m === 'light' ? 'Светлая' : 'Тёмная'}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="code-window__body" style={{ '--rows': rows } as React.CSSProperties}>
         <div className="code-gutter" aria-hidden>
@@ -122,10 +139,24 @@ export function CodeWindow({ live, variants, fileName, highlight, label }: Props
         </div>
       </div>
 
+      {tokens && (
+        <TokenControls
+          text={live.text}
+          onChange={(next) => {
+            live.pause()
+            live.onEdit(next)
+          }}
+        />
+      )}
+
       <div className="code-window__foot">
-        <span className="code-status" data-live={live.playing}>
+        <span className="code-status" data-live={live.playing} data-error={errors.length > 0} aria-live="polite">
           <i aria-hidden />
-          {live.playing ? 'Идёт показ' : 'Можно править — результат сразу'}
+          {errors.length > 0
+            ? `Строка ${errors[0]!.line}: ${errors[0]!.message}`
+            : live.playing
+              ? 'Идёт показ'
+              : 'Можно править — результат сразу'}
         </span>
         <span className="code-hint">{live.playing ? 'Клик по коду — править самому' : '▶ — запустить показ снова'}</span>
       </div>

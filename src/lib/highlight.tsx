@@ -7,13 +7,7 @@ const VALUE_TOKENS = /(#[0-9a-fA-F]{3,8}\b|"[^"]*"|var\([^)]*\)|-?\d*\.?\d+(?:re
 function value(text: string): ReactNode[] {
   return text.split(VALUE_TOKENS).map((part, i) => {
     if (!part) return null
-    if (part.startsWith('#') && /^#[0-9a-fA-F]{3,8}$/.test(part))
-      return (
-        <span key={i} className="tok-color">
-          <i className="tok-swatch" style={{ background: part }} />
-          {part}
-        </span>
-      )
+    if (/^#[0-9a-fA-F]{3,8}$/.test(part)) return <span key={i} className="tok-color">{part}</span>
     if (part.startsWith('"')) return <span key={i} className="tok-str">{part}</span>
     if (part.startsWith('var(')) return <span key={i} className="tok-fn">{part}</span>
     if (/^-?\d*\.?\d+(?:rem|px|em|%|deg|fr)?$/.test(part)) return <span key={i} className="tok-num">{part}</span>
@@ -34,16 +28,28 @@ export const highlightCss: Highlighter = (line) => {
       </>
     )
   const decl = line.match(/^(\s*)([-\w]+)(\s*:\s*)(.*?)(;?)\s*$/)
-  if (decl)
+  if (decl) {
+    const sep = decl[3] ?? ''
+    const val = decl[4] ?? ''
+    // квадратик цвета рисуем фоном самого пробела: ширина текста не меняется
+    const swatch = /^#[0-9a-fA-F]{3,8}$/.test(val) && sep.endsWith(' ')
     return (
       <>
         {decl[1]}
         <span className="tok-prop">{decl[2]}</span>
-        <span className="tok-pun">{decl[3]}</span>
-        {value(decl[4] ?? '')}
+        {swatch ? (
+          <>
+            <span className="tok-pun">{sep.slice(0, -1)}</span>
+            <span className="tok-sw" style={{ '--c': val } as React.CSSProperties}>{' '}</span>
+          </>
+        ) : (
+          <span className="tok-pun">{sep}</span>
+        )}
+        {value(val)}
         <span className="tok-pun">{decl[5]}</span>
       </>
     )
+  }
   // однострочное правило: .logo { rotate: 8deg; }
   const one = line.match(/^(\s*)([^{]+?)(\s*\{\s*)([-\w]+)(\s*:\s*)(.*?)(;?)(\s*\}?)\s*$/)
   if (one)

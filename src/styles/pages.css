@@ -177,13 +177,14 @@
 
   /* ===== Редактор кода ===== */
   .code-window {
+    --win-r: 12px;
     --code-bg: #101015;
     --code-bar: #17171d;
     --code-text: #e8e8ef;
     --code-dim: #6b6b78;
     --code-line: rgb(255 255 255 / 0.08);
     position: relative;
-    border-radius: var(--radius-lg);
+    border-radius: var(--win-r);
     background: var(--code-bg);
     color: var(--code-text);
     box-shadow: var(--shadow-window);
@@ -377,14 +378,12 @@
     color: #6b6b78;
     font-style: italic;
   }
-  .tok-swatch {
-    display: inline-block;
-    width: 0.8em;
-    height: 0.8em;
-    margin-right: 0.45em;
-    border-radius: 0.2em;
-    vertical-align: -0.08em;
-    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.3);
+  /* Квадратик цвета — фон самого пробела перед значением: ширина текста не меняется,
+     поэтому слой подсветки совпадает с textarea символ в символ */
+  .tok-sw {
+    background:
+      linear-gradient(var(--c), var(--c)) 0.12ch center / 0.52em 0.52em no-repeat,
+      linear-gradient(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.4)) 0.04ch center / 0.7em 0.7em no-repeat;
   }
 
   /* ===== Демо: код + превью ===== */
@@ -1485,5 +1484,96 @@
     font-size: var(--fs-md);
     font-weight: var(--fw-medium);
     color: var(--text-secondary);
+  }
+}
+
+@layer components {
+  /* ===== Консоль: режим, контролы, ошибки ===== */
+  .code-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .code-tab__dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.25);
+  }
+  .code-window__mode {
+    display: inline-flex;
+    margin: var(--space-2) var(--space-3) 0;
+    padding: 2px;
+    border-radius: var(--radius-pill);
+    background: rgb(255 255 255 / 0.07);
+  }
+  .code-window__mode button {
+    padding: 0.2rem 0.85rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    color: var(--code-dim);
+    transition: background-color var(--dur-fast), color var(--dur-fast);
+  }
+  .code-window__mode button[aria-pressed='true'] {
+    background: rgb(255 255 255 / 0.16);
+    color: var(--code-text);
+  }
+  .code-window__tabs {
+    padding-bottom: var(--space-1);
+    border-bottom: 0;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-top: 0.5px solid var(--code-line);
+    font-size: var(--fs-xs);
+    color: var(--code-dim);
+  }
+  .control {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+  }
+  .control input[type='color'] {
+    width: 1.6rem;
+    height: 1.6rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    cursor: pointer;
+    box-shadow: 0 0 0 1.5px rgb(255 255 255 / 0.3);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .control input[type='color']::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  .control input[type='color']::-webkit-color-swatch {
+    border: 0;
+    border-radius: 50%;
+  }
+  .control input[type='color']::-moz-color-swatch {
+    border: 0;
+    border-radius: 50%;
+  }
+  .control--range {
+    flex: 1 1 11rem;
+  }
+  .control--range input {
+    flex: 1;
+    min-width: 5rem;
+    accent-color: #ffd60a;
+  }
+  .code-status[data-error='true'] {
+    color: #ff9f7a;
+  }
+  .code-status[data-error='true'] i {
+    background: #ff5f57;
   }
 }

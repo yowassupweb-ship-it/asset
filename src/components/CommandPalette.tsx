@@ -39,12 +39,16 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       page('portfolio', 'Портфолио', '/portfolio', 'кейсы работы'),
       page('contact', 'Контакты', '/contact', 'связаться написать заявка'),
       {
-        id: 'random', group: 'Действия', label: 'Сменить стиль сайта', hint: 'Случайный из 12', keywords: 'тема цвет random',
+        id: 'random', group: 'Действия', label: 'Сменить стиль сайта', hint: 'Случайная тема', keywords: 'тема цвет random',
         icon: <IconDice width={18} height={18} />, run: () => themeStore.randomize(),
       },
       {
-        id: 'reset', group: 'Действия', label: 'Вернуть системный стиль', keywords: 'сбросить тема',
+        id: 'reset', group: 'Действия', label: 'Тема Volt (фирменная)', keywords: 'сбросить тема вернуть',
         icon: <IconMoon width={18} height={18} />, run: () => themeStore.reset(),
+      },
+      {
+        id: 'mode', group: 'Действия', label: 'Светлая / тёмная тема', hint: 'Переключить режим', keywords: 'dark light режим ночь',
+        icon: <IconMoon width={18} height={18} />, run: () => themeStore.setMode(themeStore.get().mode === 'dark' ? 'light' : 'dark'),
       },
       {
         id: 'mail', group: 'Действия', label: 'Написать на почту', hint: site.contacts.email, keywords: 'email письмо',

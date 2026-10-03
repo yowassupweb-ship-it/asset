@@ -1,47 +1,58 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Link } from 'react-router'
 import { CodeWindow } from '../components/live/CodeWindow'
 import { IconArrow } from '../components/Icon'
 import { ServiceCard, CtaBand } from '../components/Shared'
 import { delay } from '../lib/ui'
-import { themeVariants } from '../content/live'
+import { themeVariantsFor } from '../content/live'
 import { services, servicePath } from '../content/services'
 import { principles } from '../content/site'
 import { prefersReducedMotion, useLiveCode } from '../hooks/useLiveCode'
 import { usePageMeta } from '../hooks/usePageMeta'
 import { highlightCss } from '../lib/highlight'
-import { themeStore } from '../lib/themeStore'
+import { themeStore, useStyleState } from '../lib/themeStore'
 import { bundles } from '../content/extras'
 
 export default function Home() {
   usePageMeta()
-  // если стиль уже выбран (переход с другой страницы) — показываем его без автопечати
-  const current = themeStore.get()
-  const startIndex = Math.max(0, themeVariants.findIndex((v) => v.id === current.id))
-  const live = useLiveCode(themeVariants, { autoCount: 5, initialIndex: startIndex, autoplay: current.id === null && !prefersReducedMotion() })
+  const style = useStyleState()
+  const variants = useMemo(() => themeVariantsFor(style.mode), [style.mode])
+  // автопоказ только при первом заходе; если стиль уже выбран (переход, кнопка) — показываем его как есть
+  const untouched = themeStore.get().source === 'init'
+  const startIndex = Math.max(0, variants.findIndex((v) => v.id === style.theme))
+  const live = useLiveCode(variants, { autoCount: 5, initialIndex: startIndex, autoplay: untouched && !prefersReducedMotion() })
   const { show } = live
   const skip = useRef<string | null>(null)
 
-  // код в окне → стиль сайта
+  // код в консоли → стиль сайта (ручные правки — с небольшой задержкой, чтобы не мигало на каждый символ)
   useEffect(() => {
     const st = themeStore.get()
-    if (live.applied === (st.id === null ? themeVariants[0]?.code : st.code)) return
+    if (live.applied === st.code) {
+      skip.current = null
+      return
+    }
     if (skip.current === live.applied) {
       skip.current = null
       return
     }
-    themeStore.set(themeVariants[live.index]?.id ?? null, live.applied, 'live')
-  }, [live.applied, live.index])
+    const push = () => themeStore.set(variants[live.index]?.id ?? st.theme, live.applied, 'live')
+    if (live.playing) {
+      push()
+      return
+    }
+    const t = window.setTimeout(push, 220)
+    return () => window.clearTimeout(t)
+  }, [live.applied, live.index, live.playing, variants])
 
-  // стиль сменили снаружи (кнопка, переход, палитра) → окно показывает его
+  // стиль сменили снаружи (кнопка, переход, палитра, переключатель режима) → консоль показывает его
   useEffect(
     () =>
       themeStore.subscribe(() => {
         const st = themeStore.get()
         if (st.source === 'live') return
-        const i = Math.max(0, themeVariants.findIndex((v) => v.id === st.id))
-        skip.current = themeVariants[i]?.code ?? null
-        show(i)
+        const i = Math.max(0, themeVariantsFor(st.mode).findIndex((v) => v.id === st.theme))
+        skip.current = st.code
+        show(i, st.code)
       }),
     [show],
   )
@@ -85,10 +96,12 @@ export default function Home() {
           <div className="hero__visual" data-reveal style={delay(2)}>
             <CodeWindow
               live={live}
-              variants={themeVariants}
+              variants={variants}
               fileName="tokens.css"
               highlight={highlightCss}
               label="Редактор дизайн-токенов сайта"
+              tokens
+              mode={{ value: style.mode, onChange: (m) => themeStore.setMode(m) }}
             />
           </div>
         </div>

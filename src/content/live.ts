@@ -3,193 +3,77 @@
  * и сразу применяется к странице / превью.
  */
 
+import { ensureContrast, mix, readableOn } from '../lib/color'
+
 export interface Variant {
   id: string
   label: string
   code: string
+  /** Цветная точка на вкладке */
+  dot?: string
 }
 
-/** Главная: токены настоящего сайта. Меняется вся страница. */
-export const themeVariants: Variant[] = [
-  {
-    id: 'volt',
-    label: 'Volt',
-    code: `:root {
-  /* цвета — по системной теме */
-  --accent: #ffd60a;
-  --on-accent: #0c0c0f;
-  --link: #5446e6;
-  --shape: 1;
-}`,
-  },
-  {
-    id: 'midnight',
-    label: 'Полночь',
-    code: `:root {
-  color-scheme: dark;
-  --bg: #07070d;
-  --bg-elevated: #14141f;
-  --bg-sunken: #0b0b14;
-  --text: #f2f2ff;
-  --accent: #6a5cff;
-  --on-accent: #ffffff;
-  --link: #a89cff;
-  --shape: 1.4;
-}`,
-  },
-  {
-    id: 'editorial',
-    label: 'Редакция',
-    code: `:root {
-  color-scheme: light;
-  --bg: #f4efe6;
-  --bg-elevated: #fffaf0;
-  --bg-sunken: #ebe3d4;
-  --text: #1b1713;
-  --accent: #d63a2c;
-  --on-accent: #ffffff;
-  --link: #b0301f;
-  --shape: 0.25;
-}`,
-  },
-  {
-    id: 'aqua',
-    label: 'Аква',
-    code: `:root {
-  color-scheme: light;
-  --bg: #e9f7f5;
-  --bg-elevated: #ffffff;
-  --bg-sunken: #d4eeea;
-  --text: #06232a;
-  --accent: #14d9b5;
-  --on-accent: #06232a;
-  --link: #0a7d8c;
-  --shape: 1.6;
-}`,
-  },
-  {
-    id: 'brutal',
-    label: 'Брутал',
-    code: `:root {
-  color-scheme: light;
-  --bg: #fffef0;
-  --bg-elevated: #ffffff;
-  --bg-sunken: #f0efdc;
-  --text: #000000;
-  --accent: #c6ff1a;
-  --on-accent: #000000;
-  --link: #0000ee;
-  --shape: 0;
-  --radius-pill: 0;
-}`,
-  },
-  {
-    id: 'sakura',
-    label: 'Сакура',
-    code: `:root {
-  color-scheme: light;
-  --bg: #fff4f7;
-  --bg-elevated: #ffffff;
-  --bg-sunken: #ffe6ee;
-  --text: #2a0f1a;
-  --accent: #ff6fa5;
-  --on-accent: #2a0f1a;
-  --link: #c2185b;
-  --shape: 1.8;
-}`,
-  },
-  {
-    id: 'sunset',
-    label: 'Закат',
-    code: `:root {
-  color-scheme: light;
-  --bg: #fff3e6;
-  --bg-elevated: #fffaf3;
-  --bg-sunken: #ffe4cc;
-  --text: #2b1608;
-  --accent: #ff7a1a;
-  --on-accent: #2b1608;
-  --link: #c2410c;
-  --shape: 1.2;
-}`,
-  },
-  {
-    id: 'forest',
-    label: 'Лес',
-    code: `:root {
-  color-scheme: light;
-  --bg: #eef3ec;
-  --bg-elevated: #ffffff;
-  --bg-sunken: #dfe9db;
-  --text: #14231a;
-  --accent: #23804a;
-  --on-accent: #ffffff;
-  --link: #1d6b3f;
-  --shape: 0.8;
-}`,
-  },
-  {
-    id: 'ocean',
-    label: 'Океан',
-    code: `:root {
-  color-scheme: dark;
-  --bg: #06141f;
-  --bg-elevated: #0d2233;
-  --bg-sunken: #04101a;
-  --text: #e6f4ff;
-  --accent: #38bdf8;
-  --on-accent: #04101a;
-  --link: #7dd3fc;
-  --shape: 1.2;
-}`,
-  },
-  {
-    id: 'lavender',
-    label: 'Лаванда',
-    code: `:root {
-  color-scheme: light;
-  --bg: #f3f0ff;
-  --bg-elevated: #ffffff;
-  --bg-sunken: #e6e0ff;
-  --text: #1e1740;
-  --accent: #7c4dff;
-  --on-accent: #ffffff;
-  --link: #5b34d6;
-  --shape: 2;
-}`,
-  },
-  {
-    id: 'graphite',
-    label: 'Графит',
-    code: `:root {
-  color-scheme: dark;
-  --bg: #111113;
-  --bg-elevated: #1b1b1f;
-  --bg-sunken: #0b0b0d;
-  --text: #ececf0;
-  --accent: #ececf0;
-  --on-accent: #111113;
-  --link: #9aa0ff;
-  --shape: 0.6;
-}`,
-  },
-  {
-    id: 'terminal',
-    label: 'Терминал',
-    code: `:root {
-  color-scheme: dark;
-  --bg: #000000;
-  --bg-elevated: #0a140a;
-  --bg-sunken: #000000;
-  --text: #c8ffc8;
-  --accent: #39ff14;
-  --on-accent: #000000;
-  --link: #39ff14;
-  --shape: 0;
-  --radius-pill: 0;
-}`,
-  },
+export type Mode = 'light' | 'dark'
+
+/**
+ * Темы в духе Apple: системные акценты (iOS/macOS) + нейтральные поверхности с лёгким оттенком.
+ * У каждой темы есть светлая и тёмная версия.
+ */
+interface ThemeDef {
+  id: string
+  label: string
+  accent: Record<Mode, string>
+  /** Сила оттенка поверхностей (0 — чистые нейтральные) */
+  tint: number
+  /** Принудительная ссылка (для фирменной Volt) */
+  link?: Record<Mode, string>
+}
+
+const themes: ThemeDef[] = [
+  { id: 'volt', label: 'Volt', accent: { light: '#ffd60a', dark: '#ffd60a' }, tint: 0, link: { light: '#5446e6', dark: '#a89cff' } },
+  { id: 'blue', label: 'Синий', accent: { light: '#007aff', dark: '#0a84ff' }, tint: 0.05 },
+  { id: 'purple', label: 'Фиолет', accent: { light: '#af52de', dark: '#bf5af2' }, tint: 0.05 },
+  { id: 'pink', label: 'Розовый', accent: { light: '#ff2d55', dark: '#ff375f' }, tint: 0.045 },
+  { id: 'orange', label: 'Оранжевый', accent: { light: '#ff9500', dark: '#ff9f0a' }, tint: 0.05 },
+  { id: 'green', label: 'Зелёный', accent: { light: '#34c759', dark: '#30d158' }, tint: 0.05 },
+  { id: 'mint', label: 'Мятный', accent: { light: '#00c7be', dark: '#63e6e2' }, tint: 0.05 },
+  { id: 'indigo', label: 'Индиго', accent: { light: '#5856d6', dark: '#5e5ce6' }, tint: 0.05 },
+  { id: 'red', label: 'Красный', accent: { light: '#ff3b30', dark: '#ff453a' }, tint: 0.045 },
+  { id: 'graphite', label: 'Графит', accent: { light: '#8e8e93', dark: '#aeaeb2' }, tint: 0, link: { light: '#0066cc', dark: '#2997ff' } },
 ]
+
+const base: Record<Mode, { bg: string; elevated: string; sunken: string; text: string }> = {
+  light: { bg: '#f5f5f7', elevated: '#ffffff', sunken: '#ececf0', text: '#0c0c0f' },
+  dark: { bg: '#0c0c0f', elevated: '#17171c', sunken: '#08080a', text: '#f5f5f7' },
+}
+
+/** Текст кода темы для режима. Это и есть то, что печатается в консоли и применяется к сайту. */
+export function buildThemeCode(id: string, mode: Mode): string {
+  const t = themes.find((x) => x.id === id) ?? themes[0]!
+  const b = base[mode]
+  const accent = t.accent[mode]
+  const bg = mix(b.bg, accent, t.tint)
+  const elevated = mix(b.elevated, accent, t.tint * 0.6)
+  const sunken = mix(b.sunken, accent, t.tint * (mode === 'light' ? 1.4 : 0.9))
+  const link = t.link?.[mode] ?? ensureContrast(accent, bg)
+  return `:root {
+  color-scheme: ${mode};
+  --bg: ${bg};
+  --bg-elevated: ${elevated};
+  --bg-sunken: ${sunken};
+  --text: ${b.text};
+  --accent: ${accent};
+  --on-accent: ${readableOn(accent)};
+  --link: ${link};
+  --shape: 1;
+}`
+}
+
+/** Варианты для консоли в выбранном режиме. */
+export const themeVariantsFor = (mode: Mode): Variant[] =>
+  themes.map((t) => ({ id: t.id, label: t.label, dot: t.accent[mode], code: buildThemeCode(t.id, mode) }))
+
+export const themeIds = themes.map((t) => t.id)
 
 /** Дизайн: карточка бренда. */
 export const brandVariants: Variant[] = [

@@ -4,6 +4,50 @@
    компоненты используют только sys. Менять бренд = править ref.
    ========================================================================== */
 
+/* Типизированные токены: если в консоли ввели невалидное значение (например,
+   недописанный цвет), браузер его отбросит и сохранит предыдущее — ничего не «пропадёт».
+   Бонус: цвета можно плавно анимировать. */
+@property --bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f5f5f7;
+}
+@property --bg-elevated {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffffff;
+}
+@property --bg-sunken {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ececf0;
+}
+@property --text {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0c0c0f;
+}
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffd60a;
+}
+@property --on-accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0c0c0f;
+}
+@property --link {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #5446e6;
+}
+@property --shape {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
 @layer tokens {
   :root {
     /* ---------- ref: цвет ---------- */

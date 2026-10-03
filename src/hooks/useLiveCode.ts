@@ -107,10 +107,11 @@ export function useLiveCode(variants: Variant[], { autoplay, startDelay = 4000, 
 
   /** Мгновенно показать вариант без печати (когда стиль сменили снаружи). */
   const show = useCallback(
-    (i: number) => {
+    (i: number, code?: string) => {
+      const next = code ?? variants[i]?.code ?? ''
       setIndex(i)
-      setText(variants[i]?.code ?? '')
-      setSettled(variants[i]?.code ?? '')
+      setText(next)
+      setSettled(next)
       setPhase('typing')
       setPlaying(false)
     },

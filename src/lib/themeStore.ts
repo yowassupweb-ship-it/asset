@@ -1,21 +1,24 @@
 import { useSyncExternalStore } from 'react'
-import { themeVariants } from '../content/live'
+import { buildThemeCode, themeIds, themeVariantsFor, type Mode } from '../content/live'
 import { prepareCss } from './css'
+import { sanitizeTokens } from './tokens'
 
 /**
- * Общее хранилище «стиля сайта».
- * Источники: live — окно с кодом на главной, random — смена при переходе/по кнопке, reset — системный.
+ * Общее хранилище стиля сайта: тема (акцент) × режим (светлый/тёмный) + код консоли.
+ * Источники изменений: live — консоль на главной, random — случайная смена, user — выбор вручную.
  */
-export type StyleSource = 'live' | 'random' | 'reset'
+export type StyleSource = 'live' | 'random' | 'user' | 'init'
 
 interface State {
-  id: string | null
+  theme: string
+  mode: Mode
   code: string
   source: StyleSource
   locked: boolean
 }
 
 const LOCK_KEY = 'asset-style-lock'
+const MODE_KEY = 'asset-theme'
 
 function readLock() {
   try {
@@ -25,7 +28,21 @@ function readLock() {
   }
 }
 
-let state: State = { id: null, code: '', source: 'reset', locked: typeof window !== 'undefined' && readLock() }
+function initialMode(): Mode {
+  if (typeof document === 'undefined') return 'light'
+  const attr = document.documentElement.dataset.theme
+  if (attr === 'light' || attr === 'dark') return attr
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+const mode0 = initialMode()
+let state: State = {
+  theme: 'volt',
+  mode: mode0,
+  code: buildThemeCode('volt', mode0),
+  source: 'init',
+  locked: typeof window !== 'undefined' && readLock(),
+}
 const listeners = new Set<() => void>()
 let fadeTimer: number | undefined
 
@@ -46,7 +63,7 @@ function paint(code: string) {
   root.dataset.liveFade = ''
   window.clearTimeout(fadeTimer)
   fadeTimer = window.setTimeout(() => delete root.dataset.liveFade, 1400)
-  el.textContent = prepareCss(code)
+  el.textContent = prepareCss(sanitizeTokens(code))
 }
 
 export const themeStore = {
@@ -57,27 +74,50 @@ export const themeStore = {
       listeners.delete(l)
     }
   },
-  /** Применить код (из окна редактора). */
-  set(id: string | null, code: string, source: StyleSource) {
-    if (state.code === code && state.id === id) return
+
+  /** Применить код (консоль, ручная правка). */
+  set(theme: string, code: string, source: StyleSource) {
+    if (state.code === code && state.theme === theme) return
     paint(code)
-    commit({ ...state, id, code, source })
+    commit({ ...state, theme, code, source })
   },
-  /** Случайный стиль, отличный от текущего. */
+
+  /** Выбрать тему в текущем режиме. */
+  setTheme(theme: string, source: StyleSource = 'user') {
+    this.set(theme, buildThemeCode(theme, state.mode), source)
+  },
+
+  /** Переключить светлый/тёмный режим, сохранив тему. */
+  setMode(mode: Mode) {
+    if (mode === state.mode) return
+    document.documentElement.dataset.theme = mode
+    try {
+      localStorage.setItem(MODE_KEY, mode)
+    } catch {
+      /* приватный режим — не критично */
+    }
+    const code = buildThemeCode(state.theme, mode)
+    paint(code)
+    commit({ ...state, mode, code, source: 'user' })
+  },
+
+  /** Случайная тема, отличная от текущей (режим не трогаем). */
   randomize() {
-    const pool = themeVariants.filter((v) => v.id !== state.id)
-    const v = pool[Math.floor(Math.random() * pool.length)]
-    if (v) this.set(v.id, v.code, 'random')
+    const pool = themeIds.filter((id) => id !== state.theme)
+    const id = pool[Math.floor(Math.random() * pool.length)]
+    if (id) this.setTheme(id, 'random')
   },
+
   /** Смена при переходе между страницами (если стиль не зафиксирован). */
   randomizeOnNavigate() {
     if (!state.locked) this.randomize()
   },
+
+  /** Вернуться к фирменной теме Volt. */
   reset() {
-    if (state.id === null && state.code === '') return
-    paint('')
-    commit({ ...state, id: null, code: '', source: 'reset' })
+    this.setTheme('volt', 'user')
   },
+
   setLocked(locked: boolean) {
     try {
       localStorage.setItem(LOCK_KEY, locked ? '1' : '0')
@@ -90,4 +130,4 @@ export const themeStore = {
 
 export const useStyleState = () => useSyncExternalStore(themeStore.subscribe, themeStore.get, themeStore.get)
 
-export const styleLabel = (id: string | null) => themeVariants.find((v) => v.id === id)?.label ?? 'Системный'
+export const styleLabel = (id: string) => themeVariantsFor('light').find((v) => v.id === id)?.label ?? id

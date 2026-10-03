@@ -79,7 +79,7 @@ export function Menubar({ onSearch }: { onSearch: () => void }) {
               title="Случайный стиль"
             >
               <IconDice width={16} height={16} />
-              <span>{styleLabel(style.id)}</span>
+              <span>{styleLabel(style.theme)}</span>
             </button>
             <button
               type="button"
@@ -139,7 +139,7 @@ export function Menubar({ onSearch }: { onSearch: () => void }) {
             </Link>
           ))}
           <button type="button" className="sheet__link sheet__style" onClick={() => themeStore.randomize()}>
-            <IconDice width={18} height={18} /> Сменить стиль · {styleLabel(style.id)}
+            <IconDice width={18} height={18} /> Сменить стиль · {styleLabel(style.theme)}
           </button>
           <Link to="/contact" className="btn btn--accent btn--lg">
             Обсудить проект

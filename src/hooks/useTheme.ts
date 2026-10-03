@@ -1,33 +1,7 @@
-import { useCallback, useState } from 'react'
-import { themeStore } from '../lib/themeStore'
+import { themeStore, useStyleState } from '../lib/themeStore'
 
-export type Theme = 'light' | 'dark'
-
-const KEY = 'asset-theme'
-
-function systemTheme(): Theme {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-}
-
-function currentTheme(): Theme {
-  const attr = document.documentElement.dataset.theme
-  return attr === 'light' || attr === 'dark' ? attr : systemTheme()
-}
-
+/** Светлый/тёмный режим — часть общего стиля сайта (см. themeStore). */
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(currentTheme)
-
-  const toggle = useCallback(() => {
-    const next: Theme = theme === 'dark' ? 'light' : 'dark'
-    document.documentElement.dataset.theme = next
-    try {
-      localStorage.setItem(KEY, next)
-    } catch {
-      /* приватный режим — не критично */
-    }
-    setTheme(next)
-    themeStore.reset()
-  }, [theme])
-
-  return { theme, toggle }
+  const { mode } = useStyleState()
+  return { theme: mode, toggle: () => themeStore.setMode(mode === 'dark' ? 'light' : 'dark') }
 }
