@@ -1,0 +1,225 @@
+/* ==========================================================================
+   Design tokens — Ассет
+   Три уровня: ref (сырые значения) → sys (смысловые, меняются по теме) →
+   компоненты используют только sys. Менять бренд = править ref.
+   ========================================================================== */
+
+@layer tokens {
+  :root {
+    /* ---------- ref: цвет ---------- */
+    /* Graphite — холодные нейтральные */
+    --ref-gray-0: #ffffff;
+    --ref-gray-50: #f5f5f7;
+    --ref-gray-100: #ececf0;
+    --ref-gray-200: #dcdce3;
+    --ref-gray-300: #babac4;
+    --ref-gray-400: #8e8e9a;
+    --ref-gray-500: #6b6b77;
+    --ref-gray-600: #52525c;
+    --ref-gray-700: #3a3a43;
+    --ref-gray-800: #26262d;
+    --ref-gray-900: #17171c;
+    --ref-gray-950: #0c0c0f;
+
+    /* Volt — фирменный электрический жёлтый */
+    --ref-volt-200: #fff4a3;
+    --ref-volt-300: #ffec6b;
+    --ref-volt-400: #ffe233;
+    --ref-volt-500: #ffd60a;
+    --ref-volt-600: #e8b900;
+    --ref-volt-700: #b38900;
+
+    /* Plasma — второй акцент, только для свечения и ссылок */
+    --ref-plasma-300: #a89cff;
+    --ref-plasma-500: #6a5cff;
+    --ref-plasma-600: #5446e6;
+
+    /* macOS-индикаторы окна */
+    --ref-win-close: #ff5f57;
+    --ref-win-min: #febc2e;
+    --ref-win-max: #28c840;
+
+    /* ---------- ref: типографика ---------- */
+    --font-sans:
+      'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Inter Variable', 'Inter',
+      system-ui, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'SF Mono', ui-monospace, 'JetBrains Mono', Menlo, Consolas, monospace;
+
+    --fw-regular: 400;
+    --fw-medium: 500;
+    --fw-semibold: 600;
+    --fw-bold: 700;
+
+    /* Флюидная шкала (Major Third, 375px → 1280px) */
+    --fs-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
+    --fs-sm: clamp(0.8125rem, 0.79rem + 0.12vw, 0.9rem);
+    --fs-base: clamp(0.975rem, 0.94rem + 0.18vw, 1.0625rem);
+    --fs-md: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+    --fs-lg: clamp(1.25rem, 1.12rem + 0.6vw, 1.625rem);
+    --fs-xl: clamp(1.625rem, 1.3rem + 1.5vw, 2.5rem);
+    --fs-2xl: clamp(2rem, 1.4rem + 2.8vw, 3.5rem);
+    --fs-3xl: clamp(2.5rem, 1.5rem + 4.8vw, 5.25rem);
+
+    --lh-tight: 1.04;
+    --lh-snug: 1.2;
+    --lh-normal: 1.5;
+    --lh-relaxed: 1.65;
+
+    --tracking-tight: -0.035em;
+    --tracking-snug: -0.02em;
+    --tracking-normal: -0.006em;
+    --tracking-caps: 0.08em;
+
+    /* ---------- ref: сетка 4pt ---------- */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4rem;
+    --space-9: 6rem;
+    --space-10: 8rem;
+    --section-y: clamp(4.5rem, 3rem + 7vw, 9rem);
+
+    --container: 75rem;
+    --container-narrow: 52rem;
+    --gutter: clamp(1.25rem, 0.9rem + 1.6vw, 2rem);
+
+    /* ---------- ref: форма ---------- */
+    --radius-xs: 0.375rem;
+    --radius-sm: 0.625rem;
+    --radius-md: 0.875rem;
+    --radius-lg: 1.25rem;
+    --radius-xl: 1.75rem;
+    --radius-2xl: 2.25rem;
+    --radius-full: 999px;
+    --radius-icon: 22.37%; /* пропорция иконки iOS/macOS */
+
+    /* ---------- ref: движение ---------- */
+    --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur-fast: 140ms;
+    --dur-base: 240ms;
+    --dur-slow: 640ms;
+
+    /* ---------- ref: слои ---------- */
+    --z-base: 1;
+    --z-sticky: 50;
+    --z-overlay: 100;
+    --z-toast: 200;
+
+    --menubar-h: 2.75rem;
+    --blur-glass: saturate(180%) blur(22px);
+  }
+
+  /* ---------- sys: светлая тема (по умолчанию) ---------- */
+  :root,
+  :root[data-theme='light'] {
+    color-scheme: light;
+
+    --bg: var(--ref-gray-50);
+    --bg-elevated: var(--ref-gray-0);
+    --bg-sunken: var(--ref-gray-100);
+    --surface-glass: color-mix(in srgb, var(--ref-gray-0) 72%, transparent);
+    --surface-glass-strong: color-mix(in srgb, var(--ref-gray-0) 86%, transparent);
+
+    --text: var(--ref-gray-950);
+    --text-secondary: var(--ref-gray-600);
+    --text-tertiary: var(--ref-gray-500);
+    --text-inverse: var(--ref-gray-0);
+
+    --border: color-mix(in srgb, var(--ref-gray-950) 9%, transparent);
+    --border-strong: color-mix(in srgb, var(--ref-gray-950) 16%, transparent);
+    --hairline: inset 0 0 0 0.5px color-mix(in srgb, var(--ref-gray-950) 10%, transparent);
+
+    --accent: var(--ref-volt-500);
+    --accent-hover: var(--ref-volt-400);
+    --accent-pressed: var(--ref-volt-600);
+    --on-accent: var(--ref-gray-950);
+    --accent-soft: color-mix(in srgb, var(--ref-volt-500) 22%, transparent);
+
+    --link: var(--ref-plasma-600);
+    --glow: color-mix(in srgb, var(--ref-plasma-500) 20%, transparent);
+    --focus-ring: var(--ref-plasma-500);
+
+    --btn-secondary-bg: color-mix(in srgb, var(--ref-gray-950) 6%, transparent);
+    --btn-secondary-hover: color-mix(in srgb, var(--ref-gray-950) 10%, transparent);
+
+    --shadow-sm: 0 1px 2px rgb(12 12 15 / 0.06), 0 1px 1px rgb(12 12 15 / 0.04);
+    --shadow-md: 0 4px 12px rgb(12 12 15 / 0.06), 0 12px 32px rgb(12 12 15 / 0.07);
+    --shadow-lg: 0 8px 24px rgb(12 12 15 / 0.08), 0 32px 80px rgb(12 12 15 / 0.12);
+    --shadow-window:
+      0 0 0 0.5px rgb(12 12 15 / 0.14), 0 2px 6px rgb(12 12 15 / 0.06),
+      0 24px 64px rgb(12 12 15 / 0.16);
+  }
+
+  /* ---------- sys: тёмная тема ---------- */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      color-scheme: dark;
+      --bg: var(--ref-gray-950);
+      --bg-elevated: var(--ref-gray-900);
+      --bg-sunken: #08080a;
+      --surface-glass: color-mix(in srgb, var(--ref-gray-900) 68%, transparent);
+      --surface-glass-strong: color-mix(in srgb, var(--ref-gray-900) 86%, transparent);
+
+      --text: #f5f5f7;
+      --text-secondary: var(--ref-gray-300);
+      --text-tertiary: var(--ref-gray-400);
+      --text-inverse: var(--ref-gray-950);
+
+      --border: color-mix(in srgb, #fff 10%, transparent);
+      --border-strong: color-mix(in srgb, #fff 18%, transparent);
+      --hairline: inset 0 0 0 0.5px color-mix(in srgb, #fff 12%, transparent);
+
+      --accent-soft: color-mix(in srgb, var(--ref-volt-500) 16%, transparent);
+      --link: var(--ref-plasma-300);
+      --glow: color-mix(in srgb, var(--ref-plasma-500) 34%, transparent);
+
+      --btn-secondary-bg: color-mix(in srgb, #fff 9%, transparent);
+      --btn-secondary-hover: color-mix(in srgb, #fff 14%, transparent);
+
+      --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+      --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35), 0 12px 32px rgb(0 0 0 / 0.4);
+      --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.4), 0 32px 80px rgb(0 0 0 / 0.5);
+      --shadow-window:
+        0 0 0 0.5px rgb(255 255 255 / 0.16), 0 2px 6px rgb(0 0 0 / 0.4),
+        0 28px 72px rgb(0 0 0 / 0.6);
+    }
+  }
+
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --bg: var(--ref-gray-950);
+    --bg-elevated: var(--ref-gray-900);
+    --bg-sunken: #08080a;
+    --surface-glass: color-mix(in srgb, var(--ref-gray-900) 68%, transparent);
+    --surface-glass-strong: color-mix(in srgb, var(--ref-gray-900) 86%, transparent);
+
+    --text: #f5f5f7;
+    --text-secondary: var(--ref-gray-300);
+    --text-tertiary: var(--ref-gray-400);
+    --text-inverse: var(--ref-gray-950);
+
+    --border: color-mix(in srgb, #fff 10%, transparent);
+    --border-strong: color-mix(in srgb, #fff 18%, transparent);
+    --hairline: inset 0 0 0 0.5px color-mix(in srgb, #fff 12%, transparent);
+
+    --accent-soft: color-mix(in srgb, var(--ref-volt-500) 16%, transparent);
+    --link: var(--ref-plasma-300);
+    --glow: color-mix(in srgb, var(--ref-plasma-500) 34%, transparent);
+
+    --btn-secondary-bg: color-mix(in srgb, #fff 9%, transparent);
+    --btn-secondary-hover: color-mix(in srgb, #fff 14%, transparent);
+
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35), 0 12px 32px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.4), 0 32px 80px rgb(0 0 0 / 0.5);
+    --shadow-window:
+      0 0 0 0.5px rgb(255 255 255 / 0.16), 0 2px 6px rgb(0 0 0 / 0.4),
+      0 28px 72px rgb(0 0 0 / 0.6);
+  }
+}

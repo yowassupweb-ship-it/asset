@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Ассет — студия соцсетей, сайтов и автоматизации</title>
+    <meta
+      name="description"
+      content="Ассет — студия, которая превращает digital в актив: ведение соцсетей, создание сайтов и автоматизация бизнес-процессов. Без шума, с результатом."
+    />
+    <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c0c0f" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Ассет" />
+    <meta property="og:title" content="Ассет — digital, который работает как актив" />
+    <meta
+      property="og:description"
+      content="Соцсети, сайты и автоматизация бизнес-процессов в одной студии."
+    />
+    <meta property="og:image" content="/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Ассет",
+        "description": "Студия: ведение соцсетей, создание сайтов, автоматизация бизнес-процессов.",
+        "areaServed": "RU",
+        "availableLanguage": "ru",
+        "makesOffer": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Ведение социальных сетей" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Создание сайтов" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Автоматизация бизнес-процессов" } }
+        ]
+      }
+    </script>
+
+    <!-- Тема применяется до отрисовки, чтобы не было вспышки -->
+    <script>
+      try {
+        var t = localStorage.getItem('asset-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
