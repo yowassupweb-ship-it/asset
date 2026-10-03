@@ -81,20 +81,21 @@
     --space-8: 4rem;
     --space-9: 6rem;
     --space-10: 8rem;
-    --section-y: clamp(4.5rem, 3rem + 7vw, 9rem);
+    --section-y: clamp(2.75rem, 2rem + 3.2vw, 5rem);
 
-    --container: 75rem;
+    --container: 72rem;
     --container-narrow: 52rem;
-    --gutter: clamp(1.25rem, 0.9rem + 1.6vw, 2rem);
+    --gutter: clamp(1rem, 0.8rem + 1vw, 1.5rem);
 
     /* ---------- ref: форма ---------- */
-    --radius-xs: 0.375rem;
-    --radius-sm: 0.625rem;
-    --radius-md: 0.875rem;
-    --radius-lg: 1.25rem;
-    --radius-xl: 1.75rem;
-    --radius-2xl: 2.25rem;
-    --radius-full: 999px;
+    --shape: 1; /* множитель скруглений: 0 — острые углы, 1 — по умолчанию */
+    --radius-xs: calc(0.375rem * var(--shape));
+    --radius-sm: calc(0.625rem * var(--shape));
+    --radius-md: calc(0.875rem * var(--shape));
+    --radius-lg: calc(1.25rem * var(--shape));
+    --radius-xl: calc(1.75rem * var(--shape));
+    --radius-2xl: calc(2.25rem * var(--shape));
+    --radius-pill: 999px; /* кнопки, чипы, бейджи */
     --radius-icon: 22.37%; /* пропорция иконки iOS/macOS */
 
     /* ---------- ref: движение ---------- */
@@ -115,39 +116,18 @@
     --blur-glass: saturate(180%) blur(22px);
   }
 
-  /* ---------- sys: светлая тема (по умолчанию) ---------- */
+  /* ---------- sys: базовые значения темы ---------- */
   :root,
   :root[data-theme='light'] {
     color-scheme: light;
-
     --bg: var(--ref-gray-50);
     --bg-elevated: var(--ref-gray-0);
     --bg-sunken: var(--ref-gray-100);
-    --surface-glass: color-mix(in srgb, var(--ref-gray-0) 72%, transparent);
-    --surface-glass-strong: color-mix(in srgb, var(--ref-gray-0) 86%, transparent);
-
     --text: var(--ref-gray-950);
-    --text-secondary: var(--ref-gray-600);
-    --text-tertiary: var(--ref-gray-500);
-    --text-inverse: var(--ref-gray-0);
-
-    --border: color-mix(in srgb, var(--ref-gray-950) 9%, transparent);
-    --border-strong: color-mix(in srgb, var(--ref-gray-950) 16%, transparent);
-    --hairline: inset 0 0 0 0.5px color-mix(in srgb, var(--ref-gray-950) 10%, transparent);
-
     --accent: var(--ref-volt-500);
-    --accent-hover: var(--ref-volt-400);
-    --accent-pressed: var(--ref-volt-600);
     --on-accent: var(--ref-gray-950);
-    --accent-soft: color-mix(in srgb, var(--ref-volt-500) 22%, transparent);
-
     --link: var(--ref-plasma-600);
-    --glow: color-mix(in srgb, var(--ref-plasma-500) 20%, transparent);
-    --focus-ring: var(--ref-plasma-500);
-
-    --btn-secondary-bg: color-mix(in srgb, var(--ref-gray-950) 6%, transparent);
-    --btn-secondary-hover: color-mix(in srgb, var(--ref-gray-950) 10%, transparent);
-
+    --glow-strength: 22%;
     --shadow-sm: 0 1px 2px rgb(12 12 15 / 0.06), 0 1px 1px rgb(12 12 15 / 0.04);
     --shadow-md: 0 4px 12px rgb(12 12 15 / 0.06), 0 12px 32px rgb(12 12 15 / 0.07);
     --shadow-lg: 0 8px 24px rgb(12 12 15 / 0.08), 0 32px 80px rgb(12 12 15 / 0.12);
@@ -156,32 +136,15 @@
       0 24px 64px rgb(12 12 15 / 0.16);
   }
 
-  /* ---------- sys: тёмная тема ---------- */
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) {
       color-scheme: dark;
       --bg: var(--ref-gray-950);
       --bg-elevated: var(--ref-gray-900);
       --bg-sunken: #08080a;
-      --surface-glass: color-mix(in srgb, var(--ref-gray-900) 68%, transparent);
-      --surface-glass-strong: color-mix(in srgb, var(--ref-gray-900) 86%, transparent);
-
       --text: #f5f5f7;
-      --text-secondary: var(--ref-gray-300);
-      --text-tertiary: var(--ref-gray-400);
-      --text-inverse: var(--ref-gray-950);
-
-      --border: color-mix(in srgb, #fff 10%, transparent);
-      --border-strong: color-mix(in srgb, #fff 18%, transparent);
-      --hairline: inset 0 0 0 0.5px color-mix(in srgb, #fff 12%, transparent);
-
-      --accent-soft: color-mix(in srgb, var(--ref-volt-500) 16%, transparent);
       --link: var(--ref-plasma-300);
-      --glow: color-mix(in srgb, var(--ref-plasma-500) 34%, transparent);
-
-      --btn-secondary-bg: color-mix(in srgb, #fff 9%, transparent);
-      --btn-secondary-hover: color-mix(in srgb, #fff 14%, transparent);
-
+      --glow-strength: 30%;
       --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
       --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35), 0 12px 32px rgb(0 0 0 / 0.4);
       --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.4), 0 32px 80px rgb(0 0 0 / 0.5);
@@ -196,30 +159,40 @@
     --bg: var(--ref-gray-950);
     --bg-elevated: var(--ref-gray-900);
     --bg-sunken: #08080a;
-    --surface-glass: color-mix(in srgb, var(--ref-gray-900) 68%, transparent);
-    --surface-glass-strong: color-mix(in srgb, var(--ref-gray-900) 86%, transparent);
-
     --text: #f5f5f7;
-    --text-secondary: var(--ref-gray-300);
-    --text-tertiary: var(--ref-gray-400);
-    --text-inverse: var(--ref-gray-950);
-
-    --border: color-mix(in srgb, #fff 10%, transparent);
-    --border-strong: color-mix(in srgb, #fff 18%, transparent);
-    --hairline: inset 0 0 0 0.5px color-mix(in srgb, #fff 12%, transparent);
-
-    --accent-soft: color-mix(in srgb, var(--ref-volt-500) 16%, transparent);
     --link: var(--ref-plasma-300);
-    --glow: color-mix(in srgb, var(--ref-plasma-500) 34%, transparent);
-
-    --btn-secondary-bg: color-mix(in srgb, #fff 9%, transparent);
-    --btn-secondary-hover: color-mix(in srgb, #fff 14%, transparent);
-
+    --glow-strength: 30%;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
     --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35), 0 12px 32px rgb(0 0 0 / 0.4);
     --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.4), 0 32px 80px rgb(0 0 0 / 0.5);
     --shadow-window:
       0 0 0 0.5px rgb(255 255 255 / 0.16), 0 2px 6px rgb(0 0 0 / 0.4),
       0 28px 72px rgb(0 0 0 / 0.6);
+  }
+
+  /* ---------- sys: производные (одинаковы для всех тем) ----------
+     Выводятся из --bg / --text / --accent / --link, поэтому достаточно
+     поменять пару базовых токенов — и перекрасится весь сайт. */
+  :root {
+    --text-secondary: color-mix(in srgb, var(--text) 74%, var(--bg));
+    --text-tertiary: color-mix(in srgb, var(--text) 58%, var(--bg));
+    --text-inverse: var(--bg);
+
+    --surface-glass: color-mix(in srgb, var(--bg-elevated) 72%, transparent);
+    --surface-glass-strong: color-mix(in srgb, var(--bg-elevated) 88%, transparent);
+
+    --border: color-mix(in srgb, var(--text) 9%, transparent);
+    --border-strong: color-mix(in srgb, var(--text) 16%, transparent);
+    --hairline: inset 0 0 0 0.5px color-mix(in srgb, var(--text) 11%, transparent);
+
+    --accent-hover: color-mix(in srgb, var(--accent) 86%, white);
+    --accent-pressed: color-mix(in srgb, var(--accent) 86%, black);
+    --accent-soft: color-mix(in srgb, var(--accent) 20%, transparent);
+
+    --glow: color-mix(in srgb, var(--link) var(--glow-strength), transparent);
+    --focus-ring: var(--link);
+
+    --btn-secondary-bg: color-mix(in srgb, var(--text) 7%, transparent);
+    --btn-secondary-hover: color-mix(in srgb, var(--text) 12%, transparent);
   }
 }

@@ -13,30 +13,42 @@ npm run lint
 1. Vercel → Add New Project → импортировать этот репозиторий.
 2. Framework Preset определится как **Vite**, настройки менять не нужно.
 
+## Страницы
+`/` · `/services` · `/services/smm` · `/services/sites` · `/services/design` · `/services/automation` · `/approach` · `/portfolio` · `/contact`.
+Роутинг — React Router, страницы грузятся отдельными чанками. SPA-фолбэк для Vercel — `rewrites` в `vercel.json`.
+
 ## Структура
 ```
 src/
-  content/site.ts     ← ВСЕ тексты: услуги, FAQ, подход, контакты
-  styles/tokens.css   ← дизайн-токены (ref → sys), светлая/тёмная тема
-  styles/base.css     ← reset, типографика, утилиты (@layer)
-  styles/components.css
-  components/         ← секции сайта
-  hooks/              ← тема, часы, появление при скролле
-docs/ASSETS-BRIEF.md  ← ТЗ на логотип и иконки для GPT
+  content/site.ts       ← общие тексты: принципы, процесс, FAQ, контакты
+  content/services.ts   ← 4 услуги: карточки и тексты страниц
+  content/live.ts       ← варианты кода для «живых» окон
+  styles/tokens.css     ← дизайн-токены (ref → sys → производные)
+  styles/base.css · components.css · pages.css
+  components/live/      ← окно редактора и превью (токены, бренд, макет, контент-план, схема)
+  hooks/useLiveCode.ts  ← печать вариантов по кругу, пауза, правка руками
+  pages/                ← страницы
+docs/ASSETS-BRIEF.md    ← ТЗ на логотип и иконки для GPT
 ```
+
+## «Живой код»
+На главной окно `tokens.css` печатает варианты тем по кругу и применяет их к **настоящему** сайту
+через `<style id="live-theme">`. Клик по коду — пауза и правка руками. На страницах услуг —
+свои демо: контент-план → календарь, CSS → макет, CSS → карточка бренда, сценарий → схема.
+Автопечать отключена при `prefers-reduced-motion`. Добавить вариант — дописать объект в `content/live.ts`.
 
 ## Дизайн-токены
 Три уровня: **ref** (сырые значения: палитра Graphite / Volt / Plasma, шкала 4pt, флюидная типографика) →
 **sys** (смысловые: `--bg`, `--text`, `--accent`, `--surface-glass`…, переопределяются в тёмной теме) →
-компоненты используют только sys. Тема: системная + ручной переключатель (`data-theme`).
+компоненты используют только sys. Тема: системная + ручной переключатель (`data-theme`). Скругления — через `--shape`, кнопки — `--radius-pill`.
 
 ## Что заменить перед запуском
 - Контакты в `src/content/site.ts` (`email`, `telegram`) — сейчас заглушки.
 - Логотип и иконки — по `docs/ASSETS-BRIEF.md`.
 - `public/og.png` — временная картинка для превью.
 - Форма заявок открывает почтовый клиент (`mailto:`). Для приёма на сервере подключите Formspree
-  или Vercel Function и замените `onSubmit` в `src/components/Contact.tsx`.
+  или Vercel Function и замените `onSubmit` в `src/pages/Contact.tsx`.
 
 ## Как добавить портфолио
-В `src/components/Portfolio.tsx` заполните массив `cases` (`title`, `category`, `href`, `image`) —
+В `src/pages/Portfolio.tsx` заполните массив `cases` (`title`, `category`, `href`, `image`) —
 заглушка автоматически заменится сеткой карточек.

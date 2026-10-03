@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react'
+import type { IconName } from '../content/services'
 
 /**
  * Временные иконки (SF Symbols-подобные, 1.75px stroke).
@@ -54,6 +55,16 @@ export function IconAutomation(p: P) {
       <rect x="14.5" y="14" width="6.5" height="6.5" rx="2" />
       <path d="M9.5 6.75H14a3 3 0 0 1 3 3V14" />
       <path d="M3 17.25h4.5M5.25 15v4.5" />
+    </svg>
+  )
+}
+
+export function IconDesign(p: P) {
+  return (
+    <svg {...base} {...p}>
+      <path d="M12 3.2 20.8 12 12 20.8c-.6.6-1.6.6-2.2 0L3.2 14.2c-.6-.6-.6-1.6 0-2.2z" />
+      <path d="M9.5 9.5 6 6M14 6h.01" />
+      <circle cx="12" cy="12" r="1.4" />
     </svg>
   )
 }
@@ -115,8 +126,9 @@ export function IconClose(p: P) {
   )
 }
 
-export function ServiceIcon({ name, ...p }: { name: 'social' | 'web' | 'automation' } & P) {
+export function ServiceIcon({ name, ...p }: { name: IconName } & P) {
   if (name === 'social') return <IconSocial {...p} />
   if (name === 'web') return <IconWeb {...p} />
+  if (name === 'design') return <IconDesign {...p} />
   return <IconAutomation {...p} />
 }

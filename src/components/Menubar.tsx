@@ -1,22 +1,30 @@
 import { useEffect, useState } from 'react'
+import { Link, NavLink, useLocation } from 'react-router'
+import { services, servicePath } from '../content/services'
 import { useClock } from '../hooks/useClock'
 import { useTheme } from '../hooks/useTheme'
-import { IconClose, IconMenu, IconMoon, IconSun } from './Icon'
+import { IconClose, IconMenu, IconMoon, IconSun, ServiceIcon } from './Icon'
 import { Logo } from './Logo'
 
 const links = [
-  { href: '#services', label: 'Услуги' },
-  { href: '#approach', label: 'Подход' },
-  { href: '#portfolio', label: 'Портфолио' },
-  { href: '#faq', label: 'Вопросы' },
+  { to: '/approach', label: 'Подход' },
+  { to: '/portfolio', label: 'Портфолио' },
+  { to: '/contact', label: 'Контакты' },
 ]
+
+const navClass = ({ isActive }: { isActive: boolean }) => `menubar__link${isActive ? ' is-active' : ''}`
 
 /** Строка меню в духе macOS: прозрачное «стекло», логотип слева, часы справа. */
 export function Menubar() {
-  const [open, setOpen] = useState(false)
+  const [openAt, setOpenAt] = useState<string | null>(null)
   const [scrolled, setScrolled] = useState(false)
   const { theme, toggle } = useTheme()
   const clock = useClock()
+  const { pathname } = useLocation()
+  // меню закрывается само при смене страницы
+  const open = openAt === pathname
+  const setOpen = (v: boolean | ((x: boolean) => boolean)) =>
+    setOpenAt((typeof v === 'function' ? v(open) : v) ? pathname : null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -27,25 +35,36 @@ export function Menubar() {
 
   useEffect(() => {
     if (!open) return
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpenAt(null)
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
-  const close = () => setOpen(false)
-
   return (
     <header className={`menubar${scrolled ? ' is-scrolled' : ''}`}>
       <div className="menubar__inner container">
-        <a href="#top" className="menubar__brand" aria-label="Ассет — на главную" onClick={close}>
+        <Link to="/" className="menubar__brand" aria-label="Ассет — на главную" viewTransition>
           <Logo />
-        </a>
+        </Link>
 
         <nav className="menubar__nav" aria-label="Основная навигация">
+          <div className="menubar__drop">
+            <NavLink to="/services" className={navClass} viewTransition>
+              Услуги
+            </NavLink>
+            <div className="dropdown">
+              {services.map((s) => (
+                <Link key={s.id} to={servicePath(s)} className="dropdown__item" viewTransition>
+                  <ServiceIcon name={s.icon} width={18} height={18} />
+                  <span>{s.short}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="menubar__link">
+            <NavLink key={l.to} to={l.to} className={navClass} viewTransition>
               {l.label}
-            </a>
+            </NavLink>
           ))}
         </nav>
 
@@ -61,9 +80,9 @@ export function Menubar() {
           <time className="menubar__clock" aria-hidden>
             {clock}
           </time>
-          <a href="#contact" className="btn btn--accent btn--sm menubar__cta">
+          <Link to="/contact" className="btn btn--accent btn--sm menubar__cta" viewTransition>
             Обсудить проект
-          </a>
+          </Link>
           <button
             type="button"
             className="menubar__icon-btn menubar__burger"
@@ -79,14 +98,23 @@ export function Menubar() {
 
       <div id="mobile-menu" className="sheet" hidden={!open}>
         <nav className="container sheet__nav" aria-label="Мобильная навигация">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} className="sheet__link" onClick={close}>
-              {l.label}
-            </a>
+          <Link to="/services" className="sheet__link">
+            Все услуги
+          </Link>
+          {services.map((s) => (
+            <Link key={s.id} to={servicePath(s)} className="sheet__link sheet__link--sub">
+              <ServiceIcon name={s.icon} width={18} height={18} />
+              {s.short}
+            </Link>
           ))}
-          <a href="#contact" className="btn btn--accent btn--lg" onClick={close}>
+          {links.map((l) => (
+            <Link key={l.to} to={l.to} className="sheet__link">
+              {l.label}
+            </Link>
+          ))}
+          <Link to="/contact" className="btn btn--accent btn--lg">
             Обсудить проект
-          </a>
+          </Link>
         </nav>
       </div>
     </header>
