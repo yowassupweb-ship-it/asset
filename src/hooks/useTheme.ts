@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { themeStore } from '../lib/themeStore'
 
 export type Theme = 'light' | 'dark'
 
@@ -25,7 +26,7 @@ export function useTheme() {
       /* приватный режим — не критично */
     }
     setTheme(next)
-    window.dispatchEvent(new Event('asset:theme'))
+    themeStore.reset()
   }, [theme])
 
   return { theme, toggle }

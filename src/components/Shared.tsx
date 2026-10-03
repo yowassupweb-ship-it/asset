@@ -86,3 +86,29 @@ export function OtherServices({ current }: { current: string }) {
     </section>
   )
 }
+
+export function RelatedServices({ items }: { items: import('../content/extras').RelatedService[] }) {
+  return (
+    <div className="related">
+      {items.map((r, i) => {
+        const target = r.link ? services.find((s) => s.id === r.link) : undefined
+        return (
+          <article key={r.title} className="card related__item" data-reveal style={delay(i % 3)}>
+            <h3>{r.title}</h3>
+            <p>{r.text}</p>
+            <ul>
+              {r.includes.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+            {target && (
+              <Link to={servicePath(target)} className="related__link" viewTransition>
+                Подробнее в услуге «{target.short}» <IconArrow width={14} height={14} />
+              </Link>
+            )}
+          </article>
+        )
+      })}
+    </div>
+  )
+}

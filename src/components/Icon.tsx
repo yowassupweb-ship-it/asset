@@ -69,6 +69,42 @@ export function IconDesign(p: P) {
   )
 }
 
+export function IconDice(p: P) {
+  return (
+    <svg {...base} {...p}>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" />
+      <path d="M8.5 8.5h.01M15.5 8.5h.01M12 12h.01M8.5 15.5h.01M15.5 15.5h.01" strokeWidth={2.4} />
+    </svg>
+  )
+}
+
+export function IconLock({ open, ...p }: { open?: boolean } & P) {
+  return (
+    <svg {...base} {...p}>
+      <rect x="5" y="10.5" width="14" height="9.5" rx="2.5" />
+      <path d={open ? 'M8 10.5V8a4 4 0 0 1 7.5-1.9' : 'M8 10.5V8a4 4 0 0 1 8 0v2.5'} />
+    </svg>
+  )
+}
+
+export function IconSearch(p: P) {
+  return (
+    <svg {...base} {...p}>
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="m16 16 4.5 4.5" />
+    </svg>
+  )
+}
+
+export function IconCopy(p: P) {
+  return (
+    <svg {...base} {...p}>
+      <rect x="8.5" y="8.5" width="11" height="11" rx="2.5" />
+      <path d="M15.5 8.5V6.5a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2" />
+    </svg>
+  )
+}
+
 export function IconSun(p: P) {
   return (
     <svg {...base} {...p}>

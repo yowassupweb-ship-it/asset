@@ -3,7 +3,8 @@ import { Link, NavLink, useLocation } from 'react-router'
 import { services, servicePath } from '../content/services'
 import { useClock } from '../hooks/useClock'
 import { useTheme } from '../hooks/useTheme'
-import { IconClose, IconMenu, IconMoon, IconSun, ServiceIcon } from './Icon'
+import { styleLabel, themeStore, useStyleState } from '../lib/themeStore'
+import { IconClose, IconDice, IconLock, IconMenu, IconMoon, IconSearch, IconSun, ServiceIcon } from './Icon'
 import { Logo } from './Logo'
 
 const links = [
@@ -15,11 +16,12 @@ const links = [
 const navClass = ({ isActive }: { isActive: boolean }) => `menubar__link${isActive ? ' is-active' : ''}`
 
 /** Строка меню в духе macOS: прозрачное «стекло», логотип слева, часы справа. */
-export function Menubar() {
+export function Menubar({ onSearch }: { onSearch: () => void }) {
   const [openAt, setOpenAt] = useState<string | null>(null)
   const [scrolled, setScrolled] = useState(false)
   const { theme, toggle } = useTheme()
   const clock = useClock()
+  const style = useStyleState()
   const { pathname } = useLocation()
   // меню закрывается само при смене страницы
   const open = openAt === pathname
@@ -69,6 +71,30 @@ export function Menubar() {
         </nav>
 
         <div className="menubar__status">
+          <div className="stylepill" role="group" aria-label="Стиль сайта">
+            <button
+              type="button"
+              className="stylepill__roll"
+              onClick={() => themeStore.randomize()}
+              title="Случайный стиль"
+            >
+              <IconDice width={16} height={16} />
+              <span>{styleLabel(style.id)}</span>
+            </button>
+            <button
+              type="button"
+              className="stylepill__lock"
+              aria-pressed={style.locked}
+              onClick={() => themeStore.setLocked(!style.locked)}
+              aria-label={style.locked ? 'Стиль зафиксирован: не менять при переходах' : 'Менять стиль при переходах между страницами'}
+              title={style.locked ? 'Зафиксирован' : 'Менять при переходах'}
+            >
+              <IconLock open={!style.locked} width={15} height={15} />
+            </button>
+          </div>
+          <button type="button" className="menubar__icon-btn" onClick={onSearch} aria-label="Быстрый поиск (Ctrl K)" title="Поиск · Ctrl K">
+            <IconSearch width={18} height={18} />
+          </button>
           <button
             type="button"
             className="menubar__icon-btn"
@@ -112,6 +138,9 @@ export function Menubar() {
               {l.label}
             </Link>
           ))}
+          <button type="button" className="sheet__link sheet__style" onClick={() => themeStore.randomize()}>
+            <IconDice width={18} height={18} /> Сменить стиль · {styleLabel(style.id)}
+          </button>
           <Link to="/contact" className="btn btn--accent btn--lg">
             Обсудить проект
           </Link>

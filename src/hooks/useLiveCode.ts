@@ -9,6 +9,8 @@ interface Options {
   startDelay?: number
   /** Сколько первых вариантов проходит автопоказ (остальные — только по клику). */
   autoCount?: number
+  /** С какого варианта начинать (например, тот, что сейчас применён к сайту). */
+  initialIndex?: number
 }
 
 const TYPE_MS = 42
@@ -22,18 +24,18 @@ export const prefersReducedMotion = () =>
  * «Живой» код: печатает варианты по кругу, стирает, печатает следующий.
  * Пользователь может поставить на паузу и править текст руками.
  */
-export function useLiveCode(variants: Variant[], { autoplay, startDelay = 4000, autoCount }: Options = {}) {
+export function useLiveCode(variants: Variant[], { autoplay, startDelay = 4000, autoCount, initialIndex = 0 }: Options = {}) {
   const reduce = prefersReducedMotion()
   const shouldPlay = autoplay ?? !reduce
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(initialIndex)
   // окно никогда не пустое: стартуем с первого варианта, дальше он стирается и идёт следующий
-  const [text, setText] = useState(() => variants[0]?.code ?? '')
+  const [text, setText] = useState(() => variants[initialIndex]?.code ?? '')
   const [phase, setPhase] = useState<Phase>(shouldPlay ? 'hold' : 'typing')
   const [playing, setPlaying] = useState(shouldPlay)
   // вне поля зрения / вкладка скрыта — печать приостановлена, но режим не меняется
   const [suspended, setSuspended] = useState(false)
   // последний полностью написанный вариант: именно он применяется к странице
-  const [settled, setSettled] = useState(() => variants[0]?.code ?? '')
+  const [settled, setSettled] = useState(() => variants[initialIndex]?.code ?? '')
   const first = useRef(true)
 
   useEffect(() => {
@@ -103,14 +105,17 @@ export function useLiveCode(variants: Variant[], { autoplay, startDelay = 4000, 
     [variants, reduce],
   )
 
-  /** Сброс к первому варианту без печати (например, при смене темы). */
-  const reset = useCallback(() => {
-    setIndex(0)
-    setText(variants[0]?.code ?? '')
-    setSettled(variants[0]?.code ?? '')
-    setPhase('typing')
-    setPlaying(false)
-  }, [variants])
+  /** Мгновенно показать вариант без печати (когда стиль сменили снаружи). */
+  const show = useCallback(
+    (i: number) => {
+      setIndex(i)
+      setText(variants[i]?.code ?? '')
+      setSettled(variants[i]?.code ?? '')
+      setPhase('typing')
+      setPlaying(false)
+    },
+    [variants],
+  )
 
   const pause = useCallback(() => setPlaying(false), [])
   const toggle = useCallback(() => {
@@ -135,7 +140,7 @@ export function useLiveCode(variants: Variant[], { autoplay, startDelay = 4000, 
   /** Для страницы целиком: меняется только когда вариант дописан. */
   const applied = playing ? settled : text
 
-  return { index, text, onEdit, playing, pause, toggle, select, reset, phase, preview, applied, setSuspended }
+  return { index, text, onEdit, playing, pause, toggle, select, show, phase, preview, applied, setSuspended }
 }
 
 export type LiveCode = ReturnType<typeof useLiveCode>

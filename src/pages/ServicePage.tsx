@@ -1,7 +1,9 @@
 import { Link, useParams } from 'react-router'
-import { IconArrow } from '../components/Icon'
+import { IconArrow, IconPlus } from '../components/Icon'
 import { ServiceDemo } from '../components/live/ServiceDemo'
-import { AppIcon, CtaBand, OtherServices } from '../components/Shared'
+import { ServiceNav } from '../components/ServiceNav'
+import { AppIcon, CtaBand, OtherServices, RelatedServices } from '../components/Shared'
+import { serviceExtras } from '../content/extras'
 import { delay } from '../lib/ui'
 import { serviceBySlug } from '../content/services'
 import { usePageMeta } from '../hooks/usePageMeta'
@@ -13,6 +15,15 @@ export default function ServicePage() {
   usePageMeta(s?.page.metaTitle, s?.page.metaDescription)
   if (!s) return <NotFound />
   const p = s.page
+  const x = serviceExtras[s.id]
+  const sections = [
+    { id: 'idea', label: 'Идея' },
+    { id: 'live', label: 'Вживую' },
+    { id: 'inside', label: 'Что внутри' },
+    { id: 'process', label: 'Процесс' },
+    { id: 'related', label: 'Сопутствующие' },
+    { id: 'faq', label: 'Вопросы' },
+  ]
 
   return (
     <>
@@ -36,10 +47,20 @@ export default function ServicePage() {
               Обсудить проект <IconArrow width={18} height={18} />
             </Link>
           </div>
+          <dl className="facts" data-reveal style={delay(5)}>
+            {x.facts.map((f) => (
+              <div key={f.label}>
+                <dt>{f.label}</dt>
+                <dd>{f.value}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </header>
 
-      <section className="section section--flush">
+      <ServiceNav sections={sections} />
+
+      <section className="section section--flush" id="idea">
         <div className="container manifesto">
           <p className="eyebrow" data-reveal>Идея</p>
           <div className="manifesto__text">
@@ -50,7 +71,7 @@ export default function ServicePage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="demo-title">
+      <section className="section" id="live" aria-labelledby="demo-title">
         <div className="container">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Вживую</p>
@@ -63,7 +84,7 @@ export default function ServicePage() {
         </div>
       </section>
 
-      <section className="section section--sunken" aria-labelledby="inside-title">
+      <section className="section section--sunken" id="inside" aria-labelledby="inside-title">
         <div className="container">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Что внутри</p>
@@ -81,7 +102,7 @@ export default function ServicePage() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="steps-title">
+      <section className="section" id="process" aria-labelledby="steps-title">
         <div className="container">
           <div className="section-head" data-reveal>
             <p className="eyebrow">Как это проходит</p>
@@ -103,6 +124,37 @@ export default function ServicePage() {
                 <li key={f}>{f}</li>
               ))}
             </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--sunken" id="related" aria-labelledby="related-title">
+        <div className="container">
+          <div className="section-head" data-reveal>
+            <p className="eyebrow">Сопутствующие услуги</p>
+            <h2 id="related-title">Что ещё часто берут вместе с этим</h2>
+            <p>Это не навязанный допсервис, а продолжение задачи. Подключаем по одному — в тот момент, когда они действительно нужны.</p>
+          </div>
+          <RelatedServices items={x.related} />
+        </div>
+      </section>
+
+      <section className="section" id="faq" aria-labelledby="sfaq-title">
+        <div className="container container--narrow">
+          <div className="section-head" data-reveal>
+            <p className="eyebrow">Вопросы</p>
+            <h2 id="sfaq-title">Что обычно спрашивают</h2>
+          </div>
+          <div className="faq" data-reveal>
+            {x.faq.map((item) => (
+              <details key={item.q} className="faq__item" name="faq">
+                <summary>
+                  <span>{item.q}</span>
+                  <IconPlus className="faq__icon" width={20} height={20} />
+                </summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

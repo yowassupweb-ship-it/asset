@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { IconArrow, IconPlus } from '../components/Icon'
+import { IconArrow, IconCopy, IconPlus } from '../components/Icon'
 import { PageHero } from '../components/Shared'
 import { services, type ServiceId } from '../content/services'
 import { faq, site } from '../content/site'
@@ -15,6 +15,17 @@ export default function Contact() {
   const [selected, setSelected] = useState<ServiceId[]>([])
   const [name, setName] = useState('')
   const [message, setMessage] = useState('')
+  const [copied, setCopied] = useState(false)
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(site.contacts.email)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2000)
+    } catch {
+      /* буфер недоступен — адрес виден на странице */
+    }
+  }
 
   const toggle = (id: ServiceId) => setSelected((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]))
 
@@ -66,7 +77,13 @@ export default function Contact() {
           <aside className="contact-side" data-reveal style={{ '--i': 1 } as React.CSSProperties}>
             <div className="card contact-card">
               <h2>Напрямую</h2>
-              <a href={`mailto:${site.contacts.email}`}>{site.contacts.email}</a>
+              <div className="contact-card__row">
+                <a href={`mailto:${site.contacts.email}`}>{site.contacts.email}</a>
+                <button type="button" className="icon-chip" onClick={copy} aria-label="Скопировать e-mail">
+                  <IconCopy width={15} height={15} />
+                  <span aria-live="polite">{copied ? 'Скопировано' : 'Копировать'}</span>
+                </button>
+              </div>
               <a href={site.contacts.telegram} target="_blank" rel="noopener noreferrer">
                 Telegram {site.contacts.telegramLabel}
               </a>
