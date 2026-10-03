@@ -86,26 +86,3 @@ export function OtherServices({ current }: { current: string }) {
     </section>
   )
 }
-
-export function Marquee({ items }: { items: string[] }) {
-  const row = (
-    <ul className="marquee__row" aria-hidden>
-      {items.map((t) => (
-        <li key={t}>
-          <span>{t}</span>
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden>
-            <path d="M13.4 2.2 4.8 13.4h6.1l-1 8.4 9.2-11.6h-6.2z" />
-          </svg>
-        </li>
-      ))}
-    </ul>
-  )
-  return (
-    <div className="marquee" role="presentation">
-      <div className="marquee__track">
-        {row}
-        {row}
-      </div>
-    </div>
-  )
-}

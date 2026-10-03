@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import { GlobalTheme } from '../components/live/GlobalTheme'
 import { CodeWindow } from '../components/live/CodeWindow'
 import { IconArrow } from '../components/Icon'
-import { Marquee, ServiceCard, CtaBand } from '../components/Shared'
+import { ServiceCard, CtaBand } from '../components/Shared'
 import { delay } from '../lib/ui'
 import { themeVariants } from '../content/live'
 import { services } from '../content/services'
@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <>
-      <GlobalTheme code={live.text} />
+      <GlobalTheme code={live.applied} />
 
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero__aurora" aria-hidden>
@@ -65,7 +65,6 @@ export default function Home() {
         </div>
       </section>
 
-      <Marquee items={['Соцсети', 'Сайты', 'Дизайн', 'Автоматизация', 'Бренды', 'Воронки', 'Интерфейсы', 'Боты']} />
 
       <section className="section" aria-labelledby="services-title">
         <div className="container">

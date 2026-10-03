@@ -1,4 +1,4 @@
-import { useId, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import type { Variant } from '../../content/live'
 import type { LiveCode } from '../../hooks/useLiveCode'
 import type { Highlighter } from '../../lib/highlight'
@@ -19,13 +19,33 @@ interface Props {
 export function CodeWindow({ live, variants, fileName, highlight, label }: Props) {
   const id = useId()
   const area = useRef<HTMLTextAreaElement>(null)
+  const root = useRef<HTMLDivElement>(null)
+  const { setSuspended } = live
+
+  // не печатаем, пока окно вне экрана или вкладка скрыта
+  useEffect(() => {
+    const el = root.current
+    if (!el || !('IntersectionObserver' in window)) return
+    let visible = true
+    const update = () => setSuspended(!visible || document.hidden)
+    const io = new IntersectionObserver(([e]) => {
+      visible = !!e?.isIntersecting
+      update()
+    }, { threshold: 0.35 })
+    io.observe(el)
+    document.addEventListener('visibilitychange', update)
+    return () => {
+      io.disconnect()
+      document.removeEventListener('visibilitychange', update)
+    }
+  }, [setSuspended])
   const lines = live.text.split('\n')
   const rows = Math.max(...variants.map((v) => v.code.split('\n').length))
   const editing = !live.playing
   const cols = Math.max(...variants.flatMap((v) => v.code.split('\n').map((l) => l.length)), ...lines.map((l) => l.length))
 
   return (
-    <div className="code-window" data-spotlight>
+    <div className="code-window" data-spotlight ref={root}>
       <div className="window__bar">
         <span className="window__lights" aria-hidden>
           <i data-c="close" />
@@ -97,7 +117,7 @@ export function CodeWindow({ live, variants, fileName, highlight, label }: Props
             wrap="off"
             onFocus={live.pause}
             onPointerDown={live.pause}
-            onChange={(e) => live.setText(e.target.value)}
+            onChange={(e) => live.onEdit(e.target.value)}
           />
         </div>
       </div>
@@ -105,9 +125,9 @@ export function CodeWindow({ live, variants, fileName, highlight, label }: Props
       <div className="code-window__foot">
         <span className="code-status" data-live={live.playing}>
           <i aria-hidden />
-          {live.playing ? 'Печатается вживую' : 'Режим правки — меняйте код'}
+          {live.playing ? 'Идёт показ' : 'Можно править — результат сразу'}
         </span>
-        <span className="code-hint">{live.playing ? 'Клик по коду — править самому' : 'Результат обновляется сразу'}</span>
+        <span className="code-hint">{live.playing ? 'Клик по коду — править самому' : '▶ — запустить показ снова'}</span>
       </div>
     </div>
   )

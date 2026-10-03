@@ -55,7 +55,7 @@ export function ServiceDemo({ id }: { id: ServiceId }) {
   return (
     <div className="demo">
       <CodeWindow live={live} variants={cfg.variants} fileName={cfg.fileName} highlight={cfg.highlight} label={cfg.label} />
-      <div className="demo__preview">{cfg.preview(live.text)}</div>
+      <div className="demo__preview">{cfg.preview(live.preview)}</div>
     </div>
   )
 }

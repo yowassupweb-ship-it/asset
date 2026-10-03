@@ -54,7 +54,6 @@ export const themeVariants: Variant[] = [
   --on-accent: #ffffff;
   --link: #b0301f;
   --shape: 0.25;
-  --font-sans: Georgia, "Times New Roman", serif;
 }`,
   },
   {
@@ -86,7 +85,6 @@ export const themeVariants: Variant[] = [
   --link: #0000ee;
   --shape: 0;
   --radius-pill: 0;
-  --font-sans: ui-monospace, "SF Mono", monospace;
 }`,
   },
 ]
